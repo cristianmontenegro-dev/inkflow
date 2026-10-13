@@ -38,6 +38,12 @@ factor_zona = zonas.get(zona, 1.2)
 factor_complejidad = complejidades.get(complejidad, 1.0)
 total = PRECIO_BASE * tamaño * factor_zona * factor_complejidad
 
+# preguntar si es cliente recurrente
+recurrente = input("es cliente recurrente? (si/no):").lower().strip()
+if recurrente == "si":
+    total = total * 0.85
+    print("se aplicó un descuento del 15% por ser cliente recurrente")
+
 # Mostrar resultado
 print()
 print("-" * 45)
