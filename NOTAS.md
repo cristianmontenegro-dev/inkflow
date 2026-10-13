@@ -2,18 +2,28 @@
 
 ## 2026-10-09 — Día 1
 
-### ✅ Logros
+✅ Logros
 - Sitio InkFlow online en GitHub Pages
 - Repo profesional con README
 - Python 3.14.8 instalado
 - Primer script: calculadora de tatuajes
 
-### 🧠 Aprendí
+🧠 Aprendí
 - GitHub Pages ignora archivos sin `.nojekyll`
 - Diferencia entre rutas `css/styles.css` y `styles.css`
 - Python: `input()`, `float()`, diccionarios, `f-strings`
 
-### 🎯 Próximo lunes
+ 🎯 Próximo lunes
 - Agregar descuento a la calculadora
 - Agregar sección "Diario de práctica" al sitio
 - Bloque de 75 min (30 Python + 30 InkFlow + 10 commit)
+
+## 2026-10-13 — Día 2
+
+ ✅ Logros
+- Descuento del 15% para clientes recurrentes
+- Instagram agregado al footer
+
+ 🧠 Aprendí
+- Condicionales `if` en Python
+- Cómo aplicar porcentajes a variables
