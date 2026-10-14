@@ -27,3 +27,14 @@
  🧠 Aprendí
 - Condicionales `if` en Python
 - Cómo aplicar porcentajes a variables
+
+  ## 2026-10-14 — Día 3
+
+### ✅ Logros
+- Cotizaciones se guardan en `cotizaciones.txt`
+- Historial con fecha, cliente, zona, precio
+
+### 🧠 Aprendí
+- `open("archivo.txt", "a")` = agregar sin borrar
+- `datetime.now()` para fecha/hora actual
+- F-strings con variables: `f"Hola {nombre}"`
