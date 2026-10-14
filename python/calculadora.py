@@ -58,5 +58,12 @@ print("-" * 45)
 print(f"  💰 TOTAL:     ${total:,.0f} COP")
 print("-" * 45)
 print()
-print("  🖤 Cotización generada por InkFlow")
+print("   Cotización generada por InkFlow")
 print()
+# guardar cotizacion en archivo de historial 
+from datetime import datetime
+fecha = datetime.now().strftime("%y-%m-%d %H:%M")
+with open("cotizaciones.txt", "a", encoding="utf-8") as archivo:
+    archivo.write(f"[{fecha}] {nombre} | {tamaño}cm | {zona} | {complejidad} | ${total:,.0f} COP\n")
+
+print("📁 Cotización guardada en cotizaciones.txt")
