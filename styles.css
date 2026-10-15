@@ -1,5 +1,5 @@
 /* ===========================
-   INKFLOW — Estilos base
+   INKFLOW — Estilos base Pro
    =========================== */
 
 :root {
@@ -12,13 +12,38 @@
   --accent-glow: rgba(230, 57, 70, 0.4);
 }
 
+/* Corrección del selector universal */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html { scroll-behavior: smooth; }
+/* Selección de texto con estilo */
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Scrollbar personalizada para modo oscuro */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
 
 body {
   background: var(--bg);
@@ -39,8 +64,9 @@ body {
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
-  background: rgba(10, 10, 10, 0.9);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 100;
 }
 
@@ -48,6 +74,9 @@ body {
   font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nav__links {
@@ -60,19 +89,38 @@ body {
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.95rem;
-  transition: color 0.2s;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.nav__links a:hover { color: var(--accent); }
+.nav__links a:hover { 
+  color: var(--accent); 
+}
 
 /* ===========================
-   HERO
+   HERO (Con brillo ambiental)
    =========================== */
 .hero {
-  padding: 8rem 5% 6rem;
+  padding: 9rem 5% 7rem;
   text-align: center;
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
+}
+
+/* Luz de fondo ambiental para capturar atención */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 300px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, rgba(10,10,10,0) 70%);
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(40px);
 }
 
 .hero__title {
@@ -81,7 +129,7 @@ body {
   line-height: 1.05;
   letter-spacing: -2px;
   margin-bottom: 1.5rem;
-  background: linear-gradient(180deg, #fff 0%, #888 100%);
+  background: linear-gradient(180deg, #fff 20%, #777 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -102,32 +150,37 @@ body {
 }
 
 .btn {
-  padding: 0.9rem 2rem;
+  padding: 0.9rem 2.2rem;
   border-radius: 999px;
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.25s;
+  font-size: 0.95rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-block;
+  cursor: pointer;
 }
 
 .btn--primary {
   background: var(--accent);
   color: #fff;
+  box-shadow: 0 4px 20px rgba(230, 57, 70, 0.25);
 }
 
 .btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px var(--accent-glow);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px var(--accent-glow);
 }
 
 .btn--ghost {
   border: 1px solid var(--border);
   color: var(--text);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .btn--ghost:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: rgba(230, 57, 70, 0.05);
 }
 
 /* ===========================
@@ -143,15 +196,15 @@ body {
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   font-weight: 700;
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 0.8rem;
   letter-spacing: -1px;
 }
 
 .section-subtitle {
   text-align: center;
   color: var(--text-muted);
-  margin-top: -2rem;
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
+  font-size: 1rem;
 }
 
 .features__grid {
@@ -164,28 +217,48 @@ body {
   background: var(--bg-soft);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 2rem;
-  transition: all 0.3s;
+  padding: 2.2rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .card:hover {
-  border-color: var(--accent);
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  border-color: transparent;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover::after {
+  opacity: 0.4;
 }
 
 .card__icon {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .card h3 {
   font-size: 1.15rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
 }
 
 .card p {
   color: var(--text-muted);
   font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 /* ===========================
@@ -200,7 +273,7 @@ body {
 .timeline__container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
   position: relative;
   padding-left: 2rem;
 }
@@ -218,11 +291,13 @@ body {
 .timeline__item {
   position: relative;
   padding-left: 1rem;
-  opacity: 0.5;
-  transition: opacity 0.3s;
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
 }
 
-.timeline__item--active { opacity: 1; }
+.timeline__item--active { 
+  opacity: 1; 
+}
 
 .timeline__dot {
   position: absolute;
@@ -233,6 +308,7 @@ body {
   border-radius: 50%;
   background: var(--bg);
   border: 2px solid var(--border);
+  transition: all 0.3s ease;
 }
 
 .timeline__item--active .timeline__dot {
@@ -243,7 +319,8 @@ body {
 
 .timeline__item h4 {
   font-size: 1.1rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
 }
 
 .timeline__item p {
@@ -259,12 +336,14 @@ body {
   text-align: center;
   border-top: 1px solid var(--border);
   color: var(--text-muted);
+  background: linear-gradient(to bottom, var(--bg), #050505);
 }
 
 .footer__author {
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: var(--accent);
+  font-weight: 500;
 }
 
 /* ===========================
@@ -272,5 +351,5 @@ body {
    =========================== */
 @media (max-width: 640px) {
   .nav__links { display: none; }
-  .hero { padding: 5rem 5% 4rem; }
+  .hero { padding: 6rem 5% 4rem; }
 }
