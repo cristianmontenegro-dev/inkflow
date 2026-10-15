@@ -4,13 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InkFlow — Reservas y drops para tatuadores</title>
- <link rel="stylesheet" href="styles.css">
+  
+  <!-- Tipografía Inter & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <!-- NAVEGACIÓN -->
   <nav class="nav">
-    <div class="nav__logo">🖤 InkFlow</div>
+    <div class="nav__logo">
+      <span class="logo__icon">🖤</span> InkFlow
+    </div>
     <ul class="nav__links">
       <li><a href="#features">Features</a></li>
       <li><a href="#trazo">Progreso</a></li>
@@ -20,13 +28,14 @@
 
   <!-- HERO -->
   <header class="hero">
+    <div class="hero__badge">⚡ Plataforma para tatuadores independientes</div>
     <h1 class="hero__title">Del primer trazo<br>a tu primer cliente.</h1>
     <p class="hero__subtitle">
       InkFlow es el sistema de reservas, drops y seguimiento para tatuadores
       que están construyendo su camino.
     </p>
     <div class="hero__buttons">
-      <a href="#features" class="btn btn--primary">Ver features</a>
+      <a href="#features" class="btn btn--primary">Explorar features</a>
       <a href="#trazo" class="btn btn--ghost">Mi progreso</a>
     </div>
   </header>
@@ -34,36 +43,61 @@
   <!-- FEATURES -->
   <section class="features" id="features">
     <h2 class="section-title">Lo que viene</h2>
+    <p class="section-subtitle">Herramientas diseñadas para potenciar tu arte y gestionar tu estudio</p>
+
     <div class="features__grid">
       <article class="card">
-        <div class="card__icon">🎨</div>
+        <div class="card__header">
+          <div class="card__icon">🎨</div>
+          <span class="badge badge--alpha">Core</span>
+        </div>
         <h3>Galería de flash</h3>
         <p>Sube tus diseños, organízalos por estilo y muéstralos al mundo.</p>
       </article>
+
       <article class="card">
-        <div class="card__icon">⏰</div>
+        <div class="card__header">
+          <div class="card__icon">⏰</div>
+          <span class="badge badge--hot">Pro</span>
+        </div>
         <h3>Drops con countdown</h3>
-        <p>Programa cuándo se libera tu flash y crea expectativa real.</p>
+        <p>Programa cuándo se libera tu flash y crea expectativa real en tus clientes.</p>
       </article>
+
       <article class="card">
-        <div class="card__icon">📅</div>
+        <div class="card__header">
+          <div class="card__icon">💳</div>
+          <span class="badge badge--alpha">Core</span>
+        </div>
         <h3>Reservas con depósito</h3>
-        <p>Se acabó que te dejen plantado. El cliente confirma con pago.</p>
+        <p>Se acabó que te dejen plantado. El cliente confirma con anticipo seguro.</p>
       </article>
+
       <article class="card">
-        <div class="card__icon">📸</div>
+        <div class="card__header">
+          <div class="card__icon">📸</div>
+          <span class="badge badge--beta">Innovación</span>
+        </div>
         <h3>Seguimiento de sanación</h3>
-        <p>El cliente sube fotos diarias y tú ves cómo evoluciona.</p>
+        <p>El cliente sube fotos diarias de su tatuaje y tú monitoreas su evolución.</p>
       </article>
+
       <article class="card">
-        <div class="card__icon">📊</div>
+        <div class="card__header">
+          <div class="card__icon">📊</div>
+          <span class="badge badge--hot">Pro</span>
+        </div>
         <h3>Dashboard del tatuador</h3>
-        <p>Ingresos, citas y diseños más vendidos en un solo lugar.</p>
+        <p>Control de ingresos, métricas de citas y tus flashes más cotizados.</p>
       </article>
+
       <article class="card">
-        <div class="card__icon">🌎</div>
+        <div class="card__header">
+          <div class="card__icon">🌎</div>
+          <span class="badge badge--alpha">Global</span>
+        </div>
         <h3>Bilingüe ES / EN</h3>
-        <p>Porque tu arte no tiene fronteras.</p>
+        <p>Interfaz adaptada para clientes locales e internacionales.</p>
       </article>
     </div>
   </section>
@@ -71,38 +105,48 @@
   <!-- TIMELINE DE PROGRESO -->
   <section class="timeline" id="trazo">
     <h2 class="section-title">Mis primeros trazos</h2>
-    <p class="section-subtitle">Papel → Piel sintética → Piel real</p>
+    <p class="section-subtitle">Evolución técnica: Papel → Piel sintética → Piel real</p>
+
     <div class="timeline__container">
       <div class="timeline__item timeline__item--active">
         <span class="timeline__dot"></span>
-        <h4>Fase 1: Papel</h4>
-        <p>Dibujo y trazo sobre papel. Fundamentos.</p>
+        <div class="timeline__content">
+          <h4>Fase 1: Papel & Ilustración</h4>
+          <p>Dominio de líneas, sombras, contrastes y fundamentos del diseño en papel.</p>
+        </div>
       </div>
+
       <div class="timeline__item">
         <span class="timeline__dot"></span>
-        <h4>Fase 2: Piel sintética</h4>
-        <p>Práctica con máquina en piel fake / frutas.</p>
+        <div class="timeline__content">
+          <h4>Fase 2: Piel Sintética & Calibración</h4>
+          <p>Práctica con máquina rotary/pen en piel sintética, frutas y control de profundidad.</p>
+        </div>
       </div>
+
       <div class="timeline__item">
         <span class="timeline__dot"></span>
-        <h4>Fase 3: Primer tatuaje</h4>
-        <p>El día que todo cambia. Documentado.</p>
+        <div class="timeline__content">
+          <h4>Fase 3: Primer Tatuaje en Piel Real</h4>
+          <p>Ejecución en piel humana bajo estrictos protocolos de bioseguridad.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="footer" id="contacto">
-    <p>Construido con disciplina, café y tinta 🖋️</p>
-    <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
-      <p class="footer__social">
-    <a href="https://www.instagram.com/cristian_rojas328/?__pwa=1#" target="_blank">📸 Instagram</a>
-  </p>
+    <div class="footer__content">
+      <p class="footer__quote">Construido con disciplina, café y tinta 🖋️</p>
+      <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
+      <div class="footer__social">
+        <a href="https://www.instagram.com/cristian_rojas328/?__pwa=1#" target="_blank" rel="noopener noreferrer" class="social-link">
+          📸 Sígueme en Instagram
+        </a>
+      </div>
+    </div>
   </footer>
 
   <script src="js/main.js"></script>
 </body>
 </html>
-
-
-
