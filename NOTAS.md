@@ -30,11 +30,24 @@
 
   ## 2026-10-14 — Día 3
 
-### ✅ Logros
+ ✅ Logros
 - Cotizaciones se guardan en `cotizaciones.txt`
 - Historial con fecha, cliente, zona, precio
 
-### 🧠 Aprendí
+ 🧠 Aprendí
 - `open("archivo.txt", "a")` = agregar sin borrar
 - `datetime.now()` para fecha/hora actual
 - F-strings con variables: `f"Hola {nombre}"`
+
+  ## 2026-10-15 — Día 4
+
+ ✅ Logros
+- Script `estadisticas.py` lee cotizaciones.txt
+- Calcula: total, promedio, cliente más caro
+
+ 🧠 Aprendí
+- `open(..., "r")` para leer archivos
+- `.split("|")` corta strings en partes
+- `.replace()` limpia texto
+- `sum()`, `max()`, `len()` built-in
+- Listas con `.append()`
