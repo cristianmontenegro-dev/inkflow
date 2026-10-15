@@ -33,6 +33,10 @@ Proyecto en desarrollo activo. Semana 1 de 12.
 
  Autor
 
+
+
+ 
+
 **Cristian Rojas** — Tatuador & Developer en formación
 📍 Colombia
 
