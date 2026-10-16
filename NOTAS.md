@@ -1,4 +1,4 @@
-# 📓 Diario de desarrollo
+  Diario de desarrollo
 
 ## 2026-10-09 — Día 1
 
@@ -51,3 +51,14 @@
 - `.replace()` limpia texto
 - `sum()`, `max()`, `len()` built-in
 - Listas con `.append()`
+
+  ## 2026-10-16 — Día 5
+
+ ✅ Logros
+- Zona más pedida agregada a estadísticas
+- Script analiza 5 datos: total, clientes, promedio, más caro, zona top
+
+ 🧠 Aprendí
+- Diccionarios `{}` para contar cosas
+- `if x in diccionario` pa' verificar si existe
+- `max(dicc, key=dicc.get)` para encontrar el mayor
