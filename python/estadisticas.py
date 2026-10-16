@@ -12,8 +12,6 @@ print()
 for linea in lineas:
     print(linea.strip())  # .strip() quita el salto de línea al final
 
-
-
 # ================================
 # 📊 CALCULAR ESTADÍSTICAS
 # ================================
@@ -39,3 +37,28 @@ print(f"  👥 Clientes:       {len(precios)}")
 print(f"  📈 Promedio:       ${promedio:,.0f} COP")
 print(f"  🏆 Más caro:       ${mas_caro:,.0f} COP")
 print("=" * 35)
+
+# ================================
+# 📍 ZONA MÁS PEDIDA
+# ================================
+
+zonas = []
+
+for linea in lineas:
+    partes = linea.split("|")
+    zona = partes[2].strip()
+    zonas.append(zona)
+
+# Contar cuántas veces aparece cada zona
+conteo = {}
+for zona in zonas:
+    if zona in conteo:
+        conteo[zona] = conteo[zona] + 1
+    else:
+        conteo[zona] = 1
+
+# Encontrar la que más aparece
+zona_top = max(conteo, key=conteo.get)
+
+print()
+print(f"📍 Zona más pedida: {zona_top} ({conteo[zona_top]} cotizaciones)")
