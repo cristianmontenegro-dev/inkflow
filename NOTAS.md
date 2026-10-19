@@ -62,3 +62,17 @@
 - Diccionarios `{}` para contar cosas
 - `if x in diccionario` pa' verificar si existe
 - `max(dicc, key=dicc.get)` para encontrar el mayor
+
+  ## 2026-10-19 — Día 6 (Semana 2)
+
+ ✅ Logros
+- Instalé Flask.
+- Creé mi primer servidor web con Python.
+- Conecté el backend (Python) con el frontend (HTML/CSS).
+- Agregué rutas nuevas (`/contacto`).
+
+ 🧠 Aprendí
+- Qué es un servidor y cómo funciona.
+- El decorador `@app.route()`.
+- A usar `render_template()` para buscar HTML.
+- La importancia de las carpetas `templates` y `static`.
