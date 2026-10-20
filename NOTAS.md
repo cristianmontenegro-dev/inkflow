@@ -71,6 +71,18 @@
 - Conecté el backend (Python) con el frontend (HTML/CSS).
 - Agregué rutas nuevas (`/contacto`).
 
+  ## 2026-10-20 — Día 7 (Conexión Frontend-Backend)
+
+ ✅ Logros
+- Creé un formulario HTML conectado a Flask.
+- Python recibe los datos (POST) y los guarda en `reservas.txt`.
+- El ciclo de enviar y recibir datos funciona perfecto.
+
+ 🧠 Aprendí
+- Uso de `request.form.get()` para leer datos.
+- Atributos HTML: `action` y `method="POST"`.
+- Flujo completo de una aplicación web.
+
  🧠 Aprendí
 - Qué es un servidor y cómo funciona.
 - El decorador `@app.route()`.
