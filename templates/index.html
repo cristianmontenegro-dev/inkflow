@@ -71,6 +71,22 @@
       </div>
     </div>
   </section>
+    
+  <!-- FORMULARIO DE RESERVA -->
+
+  <section class="contact-form" style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
+    <h2 class="section-title">Reserva tu cita</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Cuéntame qué tienes en mente y te contacto.</p>
+    
+    <!-- action="/reservar" le dice a dónde enviar los datos, method="POST" significa "enviar" -->
+    <form action="/reservar" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+      <input type="text" name="nombre" placeholder="Tu nombre" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+      
+      <input type="text" name="idea" placeholder="Idea del tatuaje (ej: un león en el brazo)" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+      
+      <button type="submit" class="btn btn--primary" style="cursor: pointer;">Enviar Reserva</button>
+    </form>
+  </section>
 
   <!-- FOOTER -->
   <footer class="footer" id="contacto">
@@ -81,6 +97,5 @@
     </p>
   </footer>
 
-  <script src="/static/main.js"></script>
 </body>
 </html>
