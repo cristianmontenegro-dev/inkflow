@@ -87,6 +87,23 @@
       <button type="submit" class="btn btn--primary" style="cursor: pointer;">Enviar Reserva</button>
     </form>
   </section>
+    <!-- LISTA DE RESERVAS (Panel de control) -->
+  <section style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
+    <h2 class="section-title" style="color: #e63946;">📋 Reservas Pendientes</h2>
+    
+    <!-- Aquí empieza la magia de Jinja2 -->
+    {% if lista_reservas %}
+      <ul style="list-style: none; padding: 0; text-align: left;">
+        {% for reserva in lista_reservas %}
+          <li style="background: #111; border: 1px solid #333; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; color: #ccc;">
+            {{ reserva }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="color: #888;">Aún no hay reservas. ¡Sé el primero en pedir tu tatuaje!</p>
+    {% endif %}
+  </section>
 
   <!-- FOOTER -->
   <footer class="footer" id="contacto">
