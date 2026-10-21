@@ -88,3 +88,15 @@
 - El decorador `@app.route()`.
 - A usar `render_template()` para buscar HTML.
 - La importancia de las carpetas `templates` y `static`.
+
+  ## 2026-10-21 — Día 8 (Panel de Control)
+
+ ✅ Logros
+- Flask lee el archivo `reservas.txt` y lo envía al HTML.
+- Uso de Jinja2 para mostrar datos dinámicos.
+- Redirección al inicio después de enviar el formulario.
+
+ 🧠 Aprendí
+- `{% for %}` y `{% if %}` en Jinja2.
+- Manejo de errores con `try/except` (por si el archivo no existe).
+- `redirect()` y `url_for()` en Flask.
