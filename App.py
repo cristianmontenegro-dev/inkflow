@@ -1,35 +1,52 @@
 from flask import Flask, render_template, request, redirect, url_for
+import sqlite3 # <-- Importamos la base de datos
 
 app = Flask(__name__)
 
+# --- FUNCIÓN PARA CREAR LA BASE DE DATOS ---
+def init_db():
+    # Se conecta al archivo inkflow.db (si no existe, lo crea)
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    # Crea la tabla 'reservas' si no existe
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS reservas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            idea TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Ejecutamos la función para asegurarnos de que la base de datos existe
+init_db()
+
+# --- RUTA DE INICIO ---
 @app.route('/')
 def inicio():
-    # 1. Creamos una lista vacía
-    reservas = []
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    # Le pedimos a la base de datos TODAS las reservas
+    cursor.execute("SELECT * FROM reservas")
+    reservas = cursor.fetchall() # Guarda todo en una lista
+    conn.close()
     
-    # 2. Intentamos leer el archivo reservas.txt
-    try:
-        with open("reservas.txt", "r", encoding="utf-8") as archivo:
-            reservas = archivo.readlines()
-    except FileNotFoundError:
-        pass # Si el archivo no existe todavía, no pasa nada, la lista queda vacía
-        
-    # 3. Enviamos la lista al HTML (Jinja2 se encarga de mostrarla)
     return render_template('index.html', lista_reservas=reservas)
 
-@app.route('/contacto')
-def contacto():
-    return "<h1 style='color: blue;'>📞 Contáctame</h1><a href='/'>Volver al inicio</a>"
-
+# --- RUTA PARA RECIBIR EL FORMULARIO ---
 @app.route('/reservar', methods=['POST'])
 def reservar():
     nombre_cliente = request.form.get('nombre')
     idea_cliente = request.form.get('idea')
     
-    with open("reservas.txt", "a", encoding="utf-8") as archivo:
-        archivo.write(f"Cliente: {nombre_cliente} | Idea: {idea_cliente}\n")
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    # Insertamos los datos (los signos ? evitan hackeos, se llaman 'consultas parametrizadas')
+    cursor.execute("INSERT INTO reservas (nombre, idea) VALUES (?, ?)", (nombre_cliente, idea_cliente))
+    conn.commit()
+    conn.close()
     
-    # ¡MAGIA! En vez de mostrar texto blanco, te redirige al inicio
     return redirect(url_for('inicio'))
 
 if __name__ == '__main__':
