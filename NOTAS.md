@@ -100,3 +100,15 @@
 - `{% for %}` y `{% if %}` en Jinja2.
 - Manejo de errores con `try/except` (por si el archivo no existe).
 - `redirect()` y `url_for()` en Flask.
+
+  ## 2026-10-22 — Día 9 (SQLite)
+
+ ✅ Logros
+- Migré las reservas de un archivo .txt a una base de datos SQLite.
+- Flask lee la base de datos y muestra los datos con sus IDs.
+- Las tarjetas se ven profesionales con la etiqueta del ID.
+
+ 🧠 Aprendí
+- Consultas SQL básicas (CREATE TABLE, INSERT, SELECT).
+- Manejo de tuplas en Python y Jinja2.
+- Uso de `sqlite3` en Flask.
