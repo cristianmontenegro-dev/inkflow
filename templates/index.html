@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InkFlow — Reservas y drops para tatuadores</title>
-  <!-- OJO AQUÍ: Ahora el CSS está en la carpeta static -->
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
@@ -15,7 +14,7 @@
     <ul class="nav__links">
       <li><a href="#features">Features</a></li>
       <li><a href="#trazo">Progreso</a></li>
-      <li><a href="/contacto">Contacto</a></li> <!-- Enlace a la ruta de Flask -->
+      <li><a href="/contacto">Contacto</a></li>
     </ul>
   </nav>
 
@@ -71,14 +70,12 @@
       </div>
     </div>
   </section>
-    
-  <!-- FORMULARIO DE RESERVA -->
 
+  <!-- FORMULARIO DE RESERVA -->
   <section class="contact-form" style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
     <h2 class="section-title">Reserva tu cita</h2>
     <p style="color: var(--text-muted); margin-bottom: 2rem;">Cuéntame qué tienes en mente y te contacto.</p>
     
-    <!-- action="/reservar" le dice a dónde enviar los datos, method="POST" significa "enviar" -->
     <form action="/reservar" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
       <input type="text" name="nombre" placeholder="Tu nombre" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
       
@@ -87,16 +84,17 @@
       <button type="submit" class="btn btn--primary" style="cursor: pointer;">Enviar Reserva</button>
     </form>
   </section>
-    <!-- LISTA DE RESERVAS (Panel de control) -->
+
+  <!-- LISTA DE RESERVAS (Panel de control) -->
   <section style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
     <h2 class="section-title" style="color: #e63946;">📋 Reservas Pendientes</h2>
     
-    <!-- Aquí empieza la magia de Jinja2 -->
     {% if lista_reservas %}
       <ul style="list-style: none; padding: 0; text-align: left;">
         {% for reserva in lista_reservas %}
-          <li style="background: #111; border: 1px solid #333; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; color: #ccc;">
-            {{ reserva }}
+                    <li style="background: #111; border: 1px solid #333; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; color: #ccc; display: flex; justify-content: space-between; align-items: center;">
+            <span><strong>{{ reserva[1] }}</strong>: {{ reserva[2] }}</span>
+            <span style="color: #e63946; font-size: 0.8rem; background: #2a0a0a; padding: 4px 8px; border-radius: 4px;">ID: {{ reserva[0] }}</span>
           </li>
         {% endfor %}
       </ul>
