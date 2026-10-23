@@ -106,6 +106,20 @@
  ✅ Logros
 - Migré las reservas de un archivo .txt a una base de datos SQLite.
 - Flask lee la base de datos y muestra los datos con sus IDs.
+
+  ## 2026-10-23 — Día 10 (CRUD Completo)
+
+ ✅ Logros
+- Completé el ciclo CRUD (Create, Read, Delete).
+- Agregué botón para borrar reservas con SQLite.
+- Creé `.gitignore` para proteger la base de datos.
+- Instalé SQLite Viewer en VS Code para ver las tablas como Excel.
+
+ 🧠 Aprendí
+- El comando `DELETE FROM` en SQL.
+- El uso de la etiqueta `<a>` para botones.
+- Parámetros dinámicos en rutas de Flask: `/borrar/<int:id>`.
+- Cómo inspeccionar una base de datos relacional.
 - Las tarjetas se ven profesionales con la etiqueta del ID.
 
  🧠 Aprendí
