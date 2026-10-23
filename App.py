@@ -49,5 +49,14 @@ def reservar():
     
     return redirect(url_for('inicio'))
 
+@app.route('/borrar/<int:id>')
+def borrar(id):
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM reservas WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('inicio'))
+
 if __name__ == '__main__':
     app.run(debug=True)
