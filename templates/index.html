@@ -10,7 +10,7 @@
 
   <!-- NAVEGACIÓN -->
   <nav class="nav">
-    <div class="nav__logo">🖤 InkFlow</div>
+    <div class="nav__logo">InkFlow</div>
     <ul class="nav__links">
       <li><a href="#features">Features</a></li>
       <li><a href="#trazo">Progreso</a></li>
@@ -85,16 +85,26 @@
     </form>
   </section>
 
-  <!-- LISTA DE RESERVAS (Panel de control) -->
+  
+      <!-- LISTA DE RESERVAS (Panel de control) -->
   <section style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
     <h2 class="section-title" style="color: #e63946;">📋 Reservas Pendientes</h2>
     
     {% if lista_reservas %}
       <ul style="list-style: none; padding: 0; text-align: left;">
         {% for reserva in lista_reservas %}
-                    <li style="background: #111; border: 1px solid #333; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; color: #ccc; display: flex; justify-content: space-between; align-items: center;">
+          <li style="background: #111; border: 1px solid #333; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; color: #ccc; display: flex; justify-content: space-between; align-items: center;">
+            
             <span><strong>{{ reserva[1] }}</strong>: {{ reserva[2] }}</span>
-            <span style="color: #e63946; font-size: 0.8rem; background: #2a0a0a; padding: 4px 8px; border-radius: 4px;">ID: {{ reserva[0] }}</span>
+            
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span style="color: #e63946; font-size: 0.8rem; background: #2a0a0a; padding: 4px 8px; border-radius: 4px;">ID: {{ reserva[0] }}</span>
+              
+              <a href="/borrar/{{ reserva[0] }}" style="text-decoration: none; background: #333; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; color: white; transition: background 0.2s;" onmouseover="this.style.background='#e63946'" onmouseout="this.style.background='#333'">
+                🗑️ Borrar
+              </a>
+            </div>
+            
           </li>
         {% endfor %}
       </ul>
@@ -102,13 +112,12 @@
       <p style="color: #888;">Aún no hay reservas. ¡Sé el primero en pedir tu tatuaje!</p>
     {% endif %}
   </section>
-
   <!-- FOOTER -->
   <footer class="footer" id="contacto">
     <p>Construido con disciplina, café y tinta 🖋️</p>
     <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
     <p class="footer__social">
-      <a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: #e63946; text-decoration: none;">📸 Sígueme en Instagram</a>
+      <a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: #22004c; text-decoration: none;">📸 Sígueme en Instagram</a>
     </p>
   </footer>
 
