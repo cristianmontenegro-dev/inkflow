@@ -126,3 +126,14 @@
 - Consultas SQL básicas (CREATE TABLE, INSERT, SELECT).
 - Manejo de tuplas en Python y Jinja2.
 - Uso de `sqlite3` en Flask.
+
+  ## 2026-10-26 — Día 11 (Confirmación de borrado)
+
+ ✅ Logros
+- Agregué un pop-up de confirmación con JavaScript al botón de borrar.
+- Jinja2 inyecta el nombre del cliente en la alerta de JS.
+
+ 🧠 Aprendí
+- Uso de `onclick` en HTML.
+- Función `confirm()` de JavaScript.
+- Cómo mezclar variables de Python en código JS.
