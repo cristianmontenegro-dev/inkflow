@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InkFlow — Reservas y drops para tatuadores</title>
+  
+  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Enlace al CSS separado -->
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
@@ -14,7 +21,8 @@
     <ul class="nav__links">
       <li><a href="#features">Features</a></li>
       <li><a href="#trazo">Progreso</a></li>
-      <li><a href="/contacto">Contacto</a></li>
+      <li><a href="#reservar">Reservas</a></li>
+      <li><a href="#contacto">Contacto</a></li>
     </ul>
   </nav>
 
@@ -23,7 +31,7 @@
     <h1 class="hero__title">Del primer trazo<br>a tu primer cliente.</h1>
     <p class="hero__subtitle">
       InkFlow es el sistema de reservas, drops y seguimiento para tatuadores
-      que están construyendo su camino.
+      que están construyendo su camino con disciplina y arte.
     </p>
     <div class="hero__buttons">
       <a href="#features" class="btn btn--primary">Ver features</a>
@@ -34,21 +42,22 @@
   <!-- FEATURES -->
   <section class="features" id="features">
     <h2 class="section-title">Lo que viene</h2>
+    <p class="section-subtitle">Herramientas diseñadas para profesionales de la tinta</p>
     <div class="features__grid">
       <article class="card">
         <div class="card__icon">🎨</div>
         <h3>Galería de flash</h3>
-        <p>Sube tus diseños, organízalos por estilo y muéstralos al mundo.</p>
+        <p>Sube tus diseños, organízalos por estilo y muéstralos al mundo con un look impecable.</p>
       </article>
       <article class="card">
         <div class="card__icon">⏰</div>
         <h3>Drops con countdown</h3>
-        <p>Programa cuándo se libera tu flash y crea expectativa real.</p>
+        <p>Programa cuándo se libera tu flash y crea expectativa real en tu comunidad.</p>
       </article>
       <article class="card">
         <div class="card__icon">📅</div>
         <h3>Reservas con depósito</h3>
-        <p>Se acabó que te dejen plantado. El cliente confirma con pago.</p>
+        <p>Se acabó que te dejen plantado. El cliente confirma su cita con pago previo.</p>
       </article>
     </div>
   </section>
@@ -61,63 +70,67 @@
       <div class="timeline__item timeline__item--active">
         <span class="timeline__dot"></span>
         <h4>Fase 1: Papel</h4>
-        <p>Dibujo y trazo sobre papel. Fundamentos.</p>
+        <p>Dibujo y trazo sobre papel. Fundamentos y control de pulso.</p>
       </div>
       <div class="timeline__item">
         <span class="timeline__dot"></span>
         <h4>Fase 2: Piel sintética</h4>
-        <p>Práctica con máquina en piel fake / frutas.</p>
+        <p>Práctica con máquina en piel fake / frutas para dominar voltaje y profundidad.</p>
       </div>
     </div>
   </section>
 
   <!-- FORMULARIO DE RESERVA -->
-  <section class="contact-form" style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
-    <h2 class="section-title">Reserva tu cita</h2>
-    <p style="color: var(--text-muted); margin-bottom: 2rem;">Cuéntame qué tienes en mente y te contacto.</p>
-    
-    <form action="/reservar" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
-      <input type="text" name="nombre" placeholder="Tu nombre" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+  <div style="padding: 2rem 5%;">
+    <section class="contact-form-section" id="reservar">
+      <h2 class="section-title" style="margin-bottom: 0.5rem;">Reserva tu cita</h2>
+      <p style="color: var(--text-muted); text-align: center;">Cuéntame qué tienes en mente y nos ponemos en contacto.</p>
       
-      <input type="text" name="idea" placeholder="Idea del tatuaje (ej: un león en el brazo)" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
-      
-      <button type="submit" class="btn btn--primary" style="cursor: pointer;">Enviar Reserva</button>
-    </form>
-  </section>
+      <form action="/reservar" method="POST">
+        <input type="text" name="nombre" placeholder="Tu nombre" required>
+        <input type="text" name="idea" placeholder="Idea del tatuaje (ej: un león en el antebrazo)" required>
+        <button type="submit" class="btn btn--primary" style="margin-top: 0.5rem; width: 100%;">Enviar Reserva</button>
+      </form>
+    </section>
+  </div>
 
-  
-      <!-- LISTA DE RESERVAS (Panel de control) -->
-  <section style="padding: 4rem 5%; max-width: 600px; margin: 0 auto; text-align: center;">
-    <h2 class="section-title" style="color: #e63946;">📋 Reservas Pendientes</h2>
-    
-    {% if lista_reservas %}
-      <ul style="list-style: none; padding: 0; text-align: left;">
-        {% for reserva in lista_reservas %}
-          <li style="background: #111; border: 1px solid #333; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; color: #ccc; display: flex; justify-content: space-between; align-items: center;">
-            
-            <span><strong>{{ reserva[1] }}</strong>: {{ reserva[2] }}</span>
-            
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <span style="color: #e63946; font-size: 0.8rem; background: #2a0a0a; padding: 4px 8px; border-radius: 4px;">ID: {{ reserva[0] }}</span>
-              
-              <a href="/borrar/{{ reserva[0] }}" style="text-decoration: none; background: #333; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; color: white; transition: background 0.2s;" onmouseover="this.style.background='#e63946'" onmouseout="this.style.background='#333'">
-                🗑️ Borrar
-              </a>
-            </div>
-            
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p style="color: #888;">Aún no hay reservas. ¡Sé el primero en pedir tu tatuaje!</p>
-    {% endif %}
-  </section>
+  <!-- LISTA DE RESERVAS (Panel de control) -->
+  <div style="padding: 0 5%;">
+    <section class="reservas-section" id="panel-reservas">
+      <h2 class="section-title" style="color: var(--accent); font-size: 1.8rem; text-align: left;">📋 Reservas Pendientes</h2>
+      
+      {% if lista_reservas %}
+        <ul class="reservas-list">
+          {% for reserva in lista_reservas %}
+            <li class="reserva-item">
+              <div class="reserva-info">
+                <span class="reserva-name">{{ reserva[1] }}</span>
+                <span class="reserva-idea">{{ reserva[2] }}</span>
+              </div>
+              <div class="reserva-meta">
+                <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
+                <!-- Botón de borrar con confirmación -->
+                <a href="/borrar/{{ reserva[0] }}" 
+                   onclick="return confirm('¿Estás seguro de que quieres borrar la reserva de {{ reserva[1] }}?');" 
+                   class="btn-delete">
+                  🗑️ Borrar
+                </a>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty-reservas">Aún no hay reservas registradas. ¡Sé el primero en pedir tu tatuaje!</p>
+      {% endif %}
+    </section>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer" id="contacto">
     <p>Construido con disciplina, café y tinta 🖋️</p>
     <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
     <p class="footer__social">
-      <a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: #22004c; text-decoration: none;">📸 Sígueme en Instagram</a>
+      <a href="https://instagram.com/cristian_rojas328" target="_blank">📸 Sígueme en Instagram</a>
     </p>
   </footer>
 
