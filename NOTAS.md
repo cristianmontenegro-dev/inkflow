@@ -137,3 +137,15 @@
 - Uso de `onclick` en HTML.
 - Función `confirm()` de JavaScript.
 - Cómo mezclar variables de Python en código JS.
+
+  ## 2026-10-27 — Día 12 (Despliegue a Producción)
+
+ ✅ Logros
+- Configuré `requirements.txt` y `Procfile`.
+- Subí InkFlow a Render.
+- **La aplicación está en vivo en internet.** 🚀
+
+🧠 Aprendí
+- Qué es Gunicorn y para qué sirve en producción.
+- Cómo desplegar aplicaciones Flask en la nube.
+- El funcionamiento del plan gratuito de Render.
