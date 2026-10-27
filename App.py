@@ -58,5 +58,9 @@ def borrar(id):
     conn.close()
     return redirect(url_for('inicio'))
 
+import os
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    # En local usa el 5000, en Render usará el puerto que le asignen
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
