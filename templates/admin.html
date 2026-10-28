@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — InkFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body style="padding-top: 5rem;">
+  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <h1 class="section-title" style="text-align: left;">🔒 Panel de Administrador</h1>
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Aquí gestionas las reservas de InkFlow.</p>
+
+    {% if lista_reservas %}
+      <ul class="reservas-list">
+        {% for reserva in lista_reservas %}
+          <li class="reserva-item">
+            <div class="reserva-info">
+              <span class="reserva-name">{{ reserva[1] }}</span>
+              <span class="reserva-idea">{{ reserva[2] }}</span>
+            </div>
+            <div class="reserva-meta">
+              <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
+              <a href="/editar/{{ reserva[0] }}" class="btn-delete" style="background: #333; border: 1px solid #555; color: white; text-decoration: none;">✏️ Editar</a>
+              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn-delete">🗑️ Borrar</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-reservas">No hay reservas pendientes.</p>
+    {% endif %}
+    
+    <br>
+    <a href="/" style="color: var(--accent); text-decoration: none;">← Volver al inicio público</a>
+  </div>
+</body>
+</html>
