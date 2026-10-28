@@ -5,18 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InkFlow — Reservas y drops para tatuadores</title>
   
-  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-  
-  <!-- Enlace al CSS separado -->
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-
-  <!-- NAVEGACIÓN -->
-  <nav class="nav">
+    <nav class="nav">
     <div class="nav__logo">InkFlow</div>
     <ul class="nav__links">
       <li><a href="#features">Features</a></li>
@@ -26,7 +21,6 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
   <header class="hero">
     <h1 class="hero__title">Del primer trazo<br>a tu primer cliente.</h1>
     <p class="hero__subtitle">
@@ -39,7 +33,7 @@
     </div>
   </header>
 
-  <!-- FEATURES -->
+  
   <section class="features" id="features">
     <h2 class="section-title">Lo que viene</h2>
     <p class="section-subtitle">Herramientas diseñadas para profesionales de la tinta</p>
@@ -62,7 +56,6 @@
     </div>
   </section>
 
-  <!-- TIMELINE -->
   <section class="timeline" id="trazo">
     <h2 class="section-title">Mis primeros trazos</h2>
     <p class="section-subtitle">Papel → Piel sintética → Piel real</p>
@@ -79,7 +72,7 @@
       </div>
     </div>
   </section>
-
+  
   <!-- FORMULARIO DE RESERVA -->
   <div style="padding: 2rem 5%;">
     <section class="contact-form-section" id="reservar">
@@ -94,38 +87,6 @@
     </section>
   </div>
 
-  <!-- LISTA DE RESERVAS (Panel de control) -->
-  <div style="padding: 0 5%;">
-    <section class="reservas-section" id="panel-reservas">
-      <h2 class="section-title" style="color: var(--accent); font-size: 1.8rem; text-align: left;">📋 Reservas Pendientes</h2>
-      
-      {% if lista_reservas %}
-        <ul class="reservas-list">
-          {% for reserva in lista_reservas %}
-            <li class="reserva-item">
-              <div class="reserva-info">
-                <span class="reserva-name">{{ reserva[1] }}</span>
-                <span class="reserva-idea">{{ reserva[2] }}</span>
-              </div>
-              <div class="reserva-meta">
-                <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
-                <!-- Botón de borrar con confirmación -->
-                <a href="/borrar/{{ reserva[0] }}" 
-                   onclick="return confirm('¿Estás seguro de que quieres borrar la reserva de {{ reserva[1] }}?');" 
-                   class="btn-delete">
-                  🗑️ Borrar
-                </a>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p class="empty-reservas">Aún no hay reservas registradas. ¡Sé el primero en pedir tu tatuaje!</p>
-      {% endif %}
-    </section>
-  </div>
-
-  <!-- FOOTER -->
   <footer class="footer" id="contacto">
     <p>Construido con disciplina, café y tinta 🖋️</p>
     <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
