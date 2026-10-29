@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import os
 
 app = Flask(__name__)
+app.secret_key = 'inkflow_super_secreto_2026'
 
 def init_db():
     conn = sqlite3.connect('inkflow.db')
@@ -23,7 +24,7 @@ init_db()
 def inicio():
     return render_template('index.html')
 
-
+# --- RUTA PARA RECIBIR EL FORMULARIO ---
 @app.route('/reservar', methods=['POST'])
 def reservar():
     nombre_cliente = request.form.get('nombre')
@@ -37,9 +38,34 @@ def reservar():
     
     return redirect(url_for('inicio'))
 
+# --- RUTA DE LOGIN (LA VENTANILLA) ---
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        usuario = request.form.get('usuario')
+        contrasena = request.form.get('contrasena')
+        
+        if usuario == 'cristian' and contrasena == 'tatuaje2026':
+            session['logged_in'] = True 
+            return redirect(url_for('admin'))
+        else:
+            return render_template('login.html', error="Usuario o contraseña incorrectos")
+            
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None) 
+    return redirect(url_for('login'))
+
 
 @app.route('/admin')
 def admin():
+    
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM reservas")
@@ -51,6 +77,9 @@ def admin():
 
 @app.route('/borrar/<int:id>')
 def borrar(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     cursor.execute("DELETE FROM reservas WHERE id = ?", (id,))
@@ -61,6 +90,9 @@ def borrar(id):
 
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
 
