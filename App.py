@@ -24,7 +24,7 @@ init_db()
 def inicio():
     return render_template('index.html')
 
-# --- RUTA PARA RECIBIR EL FORMULARIO ---
+
 @app.route('/reservar', methods=['POST'])
 def reservar():
     nombre_cliente = request.form.get('nombre')
@@ -38,7 +38,7 @@ def reservar():
     
     return redirect(url_for('inicio'))
 
-# --- RUTA DE LOGIN (LA VENTANILLA) ---
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
