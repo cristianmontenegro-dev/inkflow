@@ -149,3 +149,39 @@
 - Qué es Gunicorn y para qué sirve en producción.
 - Cómo desplegar aplicaciones Flask en la nube.
 - El funcionamiento del plan gratuito de Render.
+
+## 2026-10-28 — Día 13 (Panel de Administrador y CRUD Completo)
+
+ ✅ Logros
+- Separé la vista pública (`/`) de la vista de administrador (`/admin`).
+- Agregué la ruta `/editar/<id>` y el archivo `editar.html`.
+- Completé el CRUD al 100% (Crear, Leer, Actualizar y Borrar).
+
+ 🧠 Aprendí
+- A crear rutas con múltiples métodos (`methods=['GET', 'POST']`).
+- A usar `UPDATE` en SQL para modificar datos existentes.
+- A mantener la interfaz pública limpia y usar una ruta secreta para el panel.
+
+## 2026-10-29 — Día 14 (Seguridad y Sesiones)
+
+ ✅ Logros
+- Agregué autenticación al panel de administrador.
+- Creé la página de `login.html` y el botón de cerrar sesión.
+- Protegí todas las rutas del panel usando `session`.
+
+ 🧠 Aprendí
+- El uso de `session` en Flask para recordar a un usuario.
+- A redirigir usuarios no autorizados al login.
+- El concepto de Autenticación y Autorización.
+
+## 2026-10-30 — Día 15 (Variables de Entorno en Producción)
+
+ ✅ Logros
+- Saqué la contraseña hardcodeada del código.
+- Configuré las Environment Variables en Render (`ADMIN_USER`, `ADMIN_PASS`, `SECRET_KEY`).
+- Probé el nuevo login seguro en producción.
+
+ 🧠 Aprendí
+- Qué son las variables de entorno y por qué son vitales para la seguridad.
+- Uso de `os.environ.get()` en Python.
+- Cómo funciona un flujo de despliegue seguro.
