@@ -1,18 +1,35 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'inkflow_super_secreto_2026')
 
+# Configuración para subir archivos
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 def init_db():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
+    # Tabla de reservas
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS reservas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
             idea TEXT NOT NULL
+        )
+    ''')
+    # Tabla de flashes (galería)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS flashes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            titulo TEXT NOT NULL,
+            imagen TEXT NOT NULL
         )
     ''')
     conn.commit()
@@ -23,7 +40,12 @@ init_db()
 # --- RUTA DE INICIO (PÚBLICA) ---
 @app.route('/')
 def inicio():
-    return render_template('index.html')
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM flashes")
+    flashes = cursor.fetchall()
+    conn.close()
+    return render_template('index.html', lista_flashes=flashes)
 
 # --- RUTA PARA RECIBIR EL FORMULARIO ---
 @app.route('/reservar', methods=['POST'])
@@ -73,11 +95,14 @@ def admin():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM reservas")
     reservas = cursor.fetchall()
+    # También traemos los flashes para mostrarlos en el admin
+    cursor.execute("SELECT * FROM flashes")
+    flashes = cursor.fetchall()
     conn.close()
     
-    return render_template('admin.html', lista_reservas=reservas)
+    return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes)
 
-# --- RUTA PARA BORRAR ---
+# --- RUTA PARA BORRAR RESERVA ---
 @app.route('/borrar/<int:id>')
 def borrar(id):
     if not session.get('logged_in'):
@@ -90,7 +115,7 @@ def borrar(id):
     conn.close()
     return redirect(url_for('admin')) 
 
-# --- RUTA PARA EDITAR ---
+# --- RUTA PARA EDITAR RESERVA ---
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
     if not session.get('logged_in'):
@@ -111,6 +136,48 @@ def editar(id):
         reserva = cursor.fetchone()
         conn.close()
         return render_template('editar.html', reserva=reserva)
+
+# --- RUTA PARA SUBIR FLASH ---
+@app.route('/subir_flash', methods=['POST'])
+def subir_flash():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
+    titulo = request.form.get('titulo')
+    archivo = request.files['imagen']
+    
+    if archivo and archivo.filename != '':
+        nombre_archivo = secure_filename(archivo.filename)
+        archivo.save(os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo))
+        
+        conn = sqlite3.connect('inkflow.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO flashes (titulo, imagen) VALUES (?, ?)", (titulo, nombre_archivo))
+        conn.commit()
+        conn.close()
+        
+    return redirect(url_for('admin'))
+
+# --- RUTA PARA BORRAR FLASH ---
+@app.route('/borrar_flash/<int:id>')
+def borrar_flash(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT imagen FROM flashes WHERE id = ?", (id,))
+    flash = cursor.fetchone()
+    
+    if flash:
+        ruta_imagen = os.path.join(app.config['UPLOAD_FOLDER'], flash[0])
+        if os.path.exists(ruta_imagen):
+            os.remove(ruta_imagen)
+            
+    cursor.execute("DELETE FROM flashes WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
