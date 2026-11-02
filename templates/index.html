@@ -5,13 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InkFlow — Reservas y drops para tatuadores</title>
   
+  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Enlace al CSS separado -->
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <nav class="nav">
+
+  <!-- NAVEGACIÓN -->
+  <nav class="nav">
     <div class="nav__logo">InkFlow</div>
     <ul class="nav__links">
       <li><a href="#features">Features</a></li>
@@ -21,6 +26,7 @@
     </ul>
   </nav>
 
+  <!-- HERO -->
   <header class="hero">
     <h1 class="hero__title">Del primer trazo<br>a tu primer cliente.</h1>
     <p class="hero__subtitle">
@@ -33,7 +39,7 @@
     </div>
   </header>
 
-  
+  <!-- FEATURES -->
   <section class="features" id="features">
     <h2 class="section-title">Lo que viene</h2>
     <p class="section-subtitle">Herramientas diseñadas para profesionales de la tinta</p>
@@ -56,6 +62,26 @@
     </div>
   </section>
 
+    <!-- GALERÍA DE FLASHES -->
+  <section class="features" id="galeria">
+    <h2 class="section-title">Galería de Flash</h2>
+    <p class="section-subtitle">Diseños exclusivos listos para tatuar</p>
+    
+    {% if lista_flashes %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; padding: 0 5%;">
+      {% for flash in lista_flashes %}
+        <div class="card" style="padding: 1rem; text-align: center;">
+          <img src="/static/uploads/{{ flash[2] }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
+          <h3 style="color: white;">{{ flash[1] }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p style="text-align: center; color: var(--text-muted);">Pronto subiré nuevos diseños.</p>
+    {% endif %}
+  </section>
+
+  <!-- TIMELINE -->
   <section class="timeline" id="trazo">
     <h2 class="section-title">Mis primeros trazos</h2>
     <p class="section-subtitle">Papel → Piel sintética → Piel real</p>
@@ -72,7 +98,7 @@
       </div>
     </div>
   </section>
-  
+
   <!-- FORMULARIO DE RESERVA -->
   <div style="padding: 2rem 5%;">
     <section class="contact-form-section" id="reservar">
@@ -87,6 +113,8 @@
     </section>
   </div>
 
+
+  <!-- FOOTER -->
   <footer class="footer" id="contacto">
     <p>Construido con disciplina, café y tinta 🖋️</p>
     <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
