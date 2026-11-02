@@ -179,6 +179,18 @@
  ✅ Logros
 - Saqué la contraseña hardcodeada del código.
 - Configuré las Environment Variables en Render (`ADMIN_USER`, `ADMIN_PASS`, `SECRET_KEY`).
+
+  ## 2026-11-02 — Día 16 (Galería de Flash)
+
+ ✅ Logros
+- Implementé la subida de archivos (imágenes) con Flask.
+- Creé la galería de flashes en el panel de admin.
+- Los clientes ahora ven la galería en la página principal.
+
+ 🧠 Aprendí
+- Uso de `enctype="multipart/form-data"` en HTML.
+- Manejo de archivos con `request.files` y `secure_filename`.
+- Guardado de imágenes en carpetas locales (`static/uploads`).
 - Probé el nuevo login seguro en producción.
 
  🧠 Aprendí
