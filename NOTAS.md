@@ -191,6 +191,19 @@
 - Uso de `enctype="multipart/form-data"` en HTML.
 - Manejo de archivos con `request.files` y `secure_filename`.
 - Guardado de imágenes en carpetas locales (`static/uploads`).
+
+  ## 2026-11-03 — Día 17 (Cloudinary y Producción)
+
+ ✅ Logros
+- Integré Cloudinary para el almacenamiento de imágenes en la nube.
+- Configuré las variables de entorno en Render para Cloudinary y Seguridad.
+- Probé el login y la subida de fotos en producción.
+- Arreglé el diseño del panel de administrador.
+
+ 🧠 Aprendí
+- Cómo subir archivos a un servicio externo (Cloudinary).
+- La diferencia entre almacenamiento local y almacenamiento en la nube.
+- Cómo manejar credenciales sensibles en producción.
 - Probé el nuevo login seguro en producción.
 
  🧠 Aprendí
