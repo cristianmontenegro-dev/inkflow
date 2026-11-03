@@ -8,12 +8,16 @@
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body style="padding-top: 5rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
+  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    
+    <!-- CABECERA -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
       <h1 class="section-title" style="text-align: left; margin-bottom: 0;">🔒 Panel de Administrador</h1>
       <a href="/logout" style="background: #333; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; border: 1px solid #555;">Salir 🚪</a>
     </div>
     <p style="color: var(--text-muted); margin-bottom: 2rem; margin-top: 1rem;">Aquí gestionas las reservas de InkFlow.</p>
 
+    <!-- LISTA DE RESERVAS -->
     {% if lista_reservas %}
       <ul class="reservas-list">
         {% for reserva in lista_reservas %}
@@ -36,14 +40,11 @@
     
     <br>
     <a href="/" style="color: var(--accent); text-decoration: none;">← Volver al inicio público</a>
-  </div>
-</body>
-</html>
+    <br><br><hr style="border-color: #333; margin: 2rem 0;"><br>
 
     <!-- FORMULARIO PARA SUBIR FLASH -->
     <div style="background: #111; padding: 2rem; border-radius: 12px; margin-bottom: 3rem; border: 1px solid #333;">
       <h3 style="color: white; margin-bottom: 1rem;">Subir nuevo Flash 🎨</h3>
-      <!-- OJO AL ENCTYPE -->
       <form action="/subir_flash" method="POST" enctype="multipart/form-data" style="display: flex; gap: 1rem; flex-wrap: wrap;">
         <input type="text" name="titulo" placeholder="Título (ej: Dragón)" required style="flex: 1; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
         <input type="file" name="imagen" accept="image/*" required style="padding: 1rem; color: white;">
@@ -51,14 +52,19 @@
       </form>
     </div>
 
-    <!-- LISTA DE FLASHES SUBIDOS (Para que los borres si quieres) -->
+    <!-- LISTA DE FLASHES SUBIDOS -->
     <h3 style="color: white; margin-bottom: 1rem;">Tus flashes:</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
       {% for flash in lista_flashes %}
         <div style="background: #222; padding: 1rem; border-radius: 8px; text-align: center;">
-          <img src="/static/uploads/{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 0.5rem;">
+          <!-- RUTA CORREGIDA PARA CLOUDINARY -->
+          <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 0.5rem;">
           <p style="color: white; font-size: 0.9rem;">{{ flash[1] }}</p>
           <a href="/borrar_flash/{{ flash[0] }}" style="color: red; font-size: 0.8rem; text-decoration: none;">🗑️ Borrar</a>
         </div>
       {% endfor %}
     </div>
+
+  </div>
+</body>
+</html>
