@@ -1,17 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import os
-from werkzeug.utils import secure_filename
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'inkflow_super_secreto_2026')
 
-# Configuración para subir archivos
-UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+# --- CONFIGURACIÓN DE CLOUDINARY ---
+cloudinary.config( 
+  cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'tgzwbtsk'), 
+  api_key = os.environ.get('CLOUDINARY_API_KEY', '126599169651419'), 
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'Yz9hq1hLx06VMgLYCgXI8HvNssY'), # <-- Pon tu secreto real aquí
+  secure = True
+)
 
 def init_db():
     conn = sqlite3.connect('inkflow.db')
@@ -95,11 +97,11 @@ def admin():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM reservas")
     reservas = cursor.fetchall()
-    # También traemos los flashes para mostrarlos en el admin
+    
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
-    conn.close()
     
+    conn.close()
     return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes)
 
 # --- RUTA PARA BORRAR RESERVA ---
@@ -137,7 +139,7 @@ def editar(id):
         conn.close()
         return render_template('editar.html', reserva=reserva)
 
-# --- RUTA PARA SUBIR FLASH ---
+# --- RUTA PARA SUBIR FLASH A LA NUBE ---
 @app.route('/subir_flash', methods=['POST'])
 def subir_flash():
     if not session.get('logged_in'):
@@ -147,12 +149,14 @@ def subir_flash():
     archivo = request.files['imagen']
     
     if archivo and archivo.filename != '':
-        nombre_archivo = secure_filename(archivo.filename)
-        archivo.save(os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo))
+        # Subimos la imagen a Cloudinary
+        resultado = cloudinary.uploader.upload(archivo)
+        url_imagen = resultado['secure_url']
         
+        # Guardamos el título y la URL en la base de datos
         conn = sqlite3.connect('inkflow.db')
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO flashes (titulo, imagen) VALUES (?, ?)", (titulo, nombre_archivo))
+        cursor.execute("INSERT INTO flashes (titulo, imagen) VALUES (?, ?)", (titulo, url_imagen))
         conn.commit()
         conn.close()
         
@@ -166,14 +170,6 @@ def borrar_flash(id):
         
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT imagen FROM flashes WHERE id = ?", (id,))
-    flash = cursor.fetchone()
-    
-    if flash:
-        ruta_imagen = os.path.join(app.config['UPLOAD_FOLDER'], flash[0])
-        if os.path.exists(ruta_imagen):
-            os.remove(ruta_imagen)
-            
     cursor.execute("DELETE FROM flashes WHERE id = ?", (id,))
     conn.commit()
     conn.close()
