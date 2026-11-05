@@ -71,7 +71,6 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; padding: 0 5%;">
       {% for flash in lista_flashes %}
         <div class="card" style="padding: 1rem; text-align: center;">
-          <!-- Ruta corregida para Cloudinary -->
           <img src="{{ flash[2] }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
           <h3 style="color: white; font-size: 1.1rem;">{{ flash[1] }}</h3>
         </div>
@@ -100,7 +99,7 @@
     </div>
   </section>
 
-  <!-- FORMULARIO DE RESERVA -->
+  <!-- FORMULARIO DE RESERVA (CON FECHA Y HORA) -->
   <div style="padding: 2rem 5%;">
     <section class="contact-form-section" id="reservar">
       <h2 class="section-title" style="margin-bottom: 0.5rem;">Reserva tu cita</h2>
@@ -109,6 +108,13 @@
       <form action="/reservar" method="POST">
         <input type="text" name="nombre" placeholder="Tu nombre" required>
         <input type="text" name="idea" placeholder="Idea del tatuaje (ej: un león en el antebrazo)" required>
+        
+        <!-- NUEVOS CAMPOS DE FECHA Y HORA -->
+        <div style="display: flex; gap: 1rem;">
+          <input type="date" name="fecha" required style="flex: 1;">
+          <input type="time" name="hora" required style="flex: 1;">
+        </div>
+
         <button type="submit" class="btn btn--primary" style="margin-top: 0.5rem; width: 100%;">Enviar Reserva</button>
       </form>
     </section>
