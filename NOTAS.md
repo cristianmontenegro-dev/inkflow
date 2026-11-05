@@ -210,3 +210,16 @@
 - Qué son las variables de entorno y por qué son vitales para la seguridad.
 - Uso de `os.environ.get()` en Python.
 - Cómo funciona un flujo de despliegue seguro.
+
+  ## 2026-11-05 — Día 18 (Calendario de Citas)
+
+ ✅ Logros
+- Agregué campos de fecha y hora al formulario público.
+- La base de datos SQLite ahora guarda fecha y hora por reserva.
+- El panel de administrador muestra las citas con un formato de agenda.
+- El formulario de edición permite modificar la fecha y la hora.
+
+ 🧠 Aprendí
+- Uso de inputs HTML `type="date"` y `type="time"`.
+- Modificación de tablas SQLite para agregar nuevas columnas.
+- Formateo de datos en Jinja2 para mostrarlos de forma legible.
