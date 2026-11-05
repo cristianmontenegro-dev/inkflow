@@ -10,7 +10,6 @@
 <body style="padding-top: 5rem;">
   <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
     
-    <!-- CABECERA -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <h1 class="section-title" style="text-align: left; margin-bottom: 0;">🔒 Panel de Administrador</h1>
       <a href="/logout" style="background: #333; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; border: 1px solid #555;">Salir 🚪</a>
@@ -25,6 +24,10 @@
             <div class="reserva-info">
               <span class="reserva-name">{{ reserva[1] }}</span>
               <span class="reserva-idea">{{ reserva[2] }}</span>
+              <!-- NUEVO: Fecha y Hora -->
+              <span style="color: var(--accent); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">
+                📅 {{ reserva[3] }} a las 🕒 {{ reserva[4] }}
+              </span>
             </div>
             <div class="reserva-meta">
               <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
@@ -52,12 +55,11 @@
       </form>
     </div>
 
-    <!-- LISTA DE FLASHES SUBIDOS -->
+    <!-- LISTA DE FLASHES -->
     <h3 style="color: white; margin-bottom: 1rem;">Tus flashes:</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
       {% for flash in lista_flashes %}
         <div style="background: #222; padding: 1rem; border-radius: 8px; text-align: center;">
-          <!-- RUTA CORREGIDA PARA CLOUDINARY -->
           <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 0.5rem;">
           <p style="color: white; font-size: 0.9rem;">{{ flash[1] }}</p>
           <a href="/borrar_flash/{{ flash[0] }}" style="color: red; font-size: 0.8rem; text-decoration: none;">🗑️ Borrar</a>
