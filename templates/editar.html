@@ -10,11 +10,24 @@
     <h2 class="section-title" style="text-align: left;">✏️ Editar Reserva</h2>
     
     <form action="/editar/{{ reserva[0] }}" method="POST" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
+      
       <label style="color: white;">Nombre del cliente:</label>
       <input type="text" name="nombre" value="{{ reserva[1] }}" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
       
       <label style="color: white;">Idea del tatuaje:</label>
       <input type="text" name="idea" value="{{ reserva[2] }}" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+      
+      <!-- NUEVOS CAMPOS DE FECHA Y HORA PARA EDITAR -->
+      <div style="display: flex; gap: 1rem;">
+        <div style="flex: 1;">
+          <label style="color: white;">Fecha:</label>
+          <input type="date" name="fecha" value="{{ reserva[3] }}" required style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+        </div>
+        <div style="flex: 1;">
+          <label style="color: white;">Hora:</label>
+          <input type="time" name="hora" value="{{ reserva[4] }}" required style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+        </div>
+      </div>
       
       <button type="submit" class="btn btn--primary" style="margin-top: 1rem;">Guardar Cambios</button>
       <a href="/admin" style="text-align: center; color: var(--text-muted); text-decoration: none;">Cancelar</a>
