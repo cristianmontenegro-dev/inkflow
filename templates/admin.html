@@ -10,11 +10,30 @@
 <body style="padding-top: 5rem;">
   <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
     
+    <!-- CABECERA -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <h1 class="section-title" style="text-align: left; margin-bottom: 0;">🔒 Panel de Administrador</h1>
       <a href="/logout" style="background: #333; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; border: 1px solid #555;">Salir 🚪</a>
     </div>
     <p style="color: var(--text-muted); margin-bottom: 2rem; margin-top: 1rem;">Aquí gestionas las reservas de InkFlow.</p>
+
+    <!-- FILTRO POR FECHA -->
+    <div style="background: #111; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #333; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <h3 style="color: white; margin: 0; flex: 1;">Filtrar citas por fecha 📅</h3>
+      
+      <form method="GET" action="/admin" style="display: flex; gap: 1rem; align-items: center;">
+        <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" style="padding: 0.8rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
+        <button type="submit" class="btn btn--primary" style="padding: 0.8rem 1.5rem;">Buscar</button>
+        
+        {% if fecha_filtro %}
+          <a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar filtro ❌</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if fecha_filtro %}
+      <p style="color: var(--accent); margin-bottom: 1rem; font-weight: 600;">Mostrando citas del día: {{ fecha_filtro }}</p>
+    {% endif %}
 
     <!-- LISTA DE RESERVAS -->
     {% if lista_reservas %}
@@ -24,7 +43,6 @@
             <div class="reserva-info">
               <span class="reserva-name">{{ reserva[1] }}</span>
               <span class="reserva-idea">{{ reserva[2] }}</span>
-              <!-- NUEVO: Fecha y Hora -->
               <span style="color: var(--accent); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">
                 📅 {{ reserva[3] }} a las 🕒 {{ reserva[4] }}
               </span>
@@ -38,7 +56,7 @@
         {% endfor %}
       </ul>
     {% else %}
-      <p class="empty-reservas">No hay reservas pendientes.</p>
+      <p class="empty-reservas">No hay reservas para esta fecha.</p>
     {% endif %}
     
     <br>
