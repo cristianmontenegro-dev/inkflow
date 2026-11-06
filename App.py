@@ -11,14 +11,14 @@ app.secret_key = os.environ.get('SECRET_KEY', 'inkflow_super_secreto_2026')
 cloudinary.config( 
   cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'tgzwbtsk'), 
   api_key = os.environ.get('CLOUDINARY_API_KEY', '126599169651419'), 
-  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'Yz9hq1hLx06WMgLYcgXI8HvNssY'), 
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'TU_SECRETO_AQUI'), # Recuerda poner tu secreto real local
   secure = True
 )
 
 def init_db():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # TABLA RESERVAS ACTUALIZADA (con fecha y hora)
+    # Tabla Reservas
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS reservas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +28,7 @@ def init_db():
             hora TEXT NOT NULL
         )
     ''')
-    # TABLA FLASHES
+    # Tabla Flashes
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS flashes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,18 +86,32 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
+# --- RUTA DE ADMINISTRADOR (CON FILTRO POR FECHA) ---
 @app.route('/admin')
 def admin():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
+    
+    # Atrapamos la fecha del filtro
+    fecha_filtro = request.args.get('fecha')
+    
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM reservas")
+    
+    if fecha_filtro:
+        # Si hay fecha, traemos SOLO las reservas de ese día
+        cursor.execute("SELECT * FROM reservas WHERE fecha = ?", (fecha_filtro,))
+    else:
+        # Si no hay fecha, traemos TODAS
+        cursor.execute("SELECT * FROM reservas")
+        
     reservas = cursor.fetchall()
+    
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     conn.close()
-    return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes)
+    
+    return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes, fecha_filtro=fecha_filtro)
 
 @app.route('/borrar/<int:id>')
 def borrar(id):
