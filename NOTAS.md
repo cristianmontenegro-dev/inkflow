@@ -223,3 +223,15 @@
 - Uso de inputs HTML `type="date"` y `type="time"`.
 - Modificación de tablas SQLite para agregar nuevas columnas.
 - Formateo de datos en Jinja2 para mostrarlos de forma legible.
+
+## 2026-11-06 — Día 19 (Filtro por Fecha)
+
+ ✅ Logros
+- Implementé un buscador por fecha en el panel de administrador.
+- Uso de parámetros de URL (`GET`) para filtrar reservas.
+- Agregué un botón para limpiar el filtro.
+
+ 🧠 Aprendí
+- Consultas SQL con `WHERE` para filtrar datos.
+- Uso de `request.args.get()` en Flask.
+- Cómo mantener el estado de un filtro en el HTML (Jinja2).
