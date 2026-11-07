@@ -11,7 +11,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'inkflow_super_secreto_2026')
 cloudinary.config( 
   cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'tgzwbtsk'), 
   api_key = os.environ.get('CLOUDINARY_API_KEY', '126599169651419'), 
-  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'TU_SECRETO_AQUI'), # Recuerda poner tu secreto real local
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'Yz9hq1hLx06VMgLYCgXI8HvNss'), # Recuerda poner tu secreto real local
   secure = True
 )
 
