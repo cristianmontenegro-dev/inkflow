@@ -235,3 +235,15 @@
 - Consultas SQL con `WHERE` para filtrar datos.
 - Uso de `request.args.get()` en Flask.
 - Cómo mantener el estado de un filtro en el HTML (Jinja2).
+
+  ## 2026-11-07 — Día 20 (Responsive Design y Bug Fixing)
+
+ ✅ Logros
+- Implementé diseño responsivo (Media Queries) para celulares.
+- Arreglé el error "Invalid Signature" en Cloudinary (API Secret incorrecto).
+- Configuré el secreto real tanto en local como en Render.
+
+ 🧠 Aprendí
+- Cómo usar el modo dispositivo en las DevTools del navegador.
+- Cómo diagnosticar y solucionar errores de autenticación en APIs.
+- La importancia de los espacios en blanco en las variables de entorno.
