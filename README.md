@@ -1,45 +1,40 @@
- InkFlow
+# 🖤 InkFlow
 
-> Sistema de reservas y drops para tatuadores independientes.
+> **El sistema de reservas y drops para tatuadores independientes.**
+> *Del primer trazo a tu primer cliente.*
 
- ¿Qué es esto?
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visitar_App-e63946?style=for-the-badge&logo=render)](https://inkflow-fpcn.onrender.com)
 
-InkFlow resuelve el caos de gestionar tatuajes por Instagram DMs:
-drops de flash, reservas con depósito y seguimiento de sanación
-en una sola plataforma.
+## 🎯 ¿Qué es InkFlow?
 
- Features (en construcción)
+InkFlow es una aplicación web diseñada para resolver el caos de gestionar citas por Instagram DMs. Permite a los tatuadores independientes mostrar su galería de diseños (flashes), gestionar reservas con fecha y hora exactas, y administrar todo desde un panel privado y seguro.
 
-- [ ] Galería de flash con filtros por estilo
-- [ ] Sistema de drops con cuenta regresiva
-- [ ] Reservas con depósito
-- [ ] Dashboard del tatuador
-- [ ] Seguimiento de sanación con fotos diarias
-- [ ] Interfaz bilingüe (ES/EN)
+## ✨ Características Principales
 
- Stack
+- 🎨 **Galería de Flash**: Subida de imágenes a la nube (Cloudinary) para mostrar los diseños a los clientes.
+- 📅 **Sistema de Reservas**: Los clientes eligen el día y la hora exacta para su cita.
+- 🔒 **Panel de Administrador**: Vista privada protegida con contraseña para gestionar las citas.
+- 🔍 **Filtro de Citas**: Búsqueda inteligente de reservas por fecha.
+- 📱 **Diseño Responsivo**: Experiencia perfecta tanto en computadores como en celulares.
 
-- HTML5 + CSS3 + JavaScript
-- Supabase (auth + base de datos) — próximamente
-- Vercel (deploy) — próximamente
--  🐍 Python
+## 🛠️ Stack Tecnológico
 
-- Calculadora de precios de tatuaje (`python/calculadora.py`)
-- Próximamente: API de reservas con Flask
+- **Backend**: Python, Flask
+- **Base de Datos**: SQLite
+- **Frontend**: HTML5, CSS3, JavaScript, Jinja2
+- **Almacenamiento**: Cloudinary (Imágenes)
+- **Despliegue**: Render
 
- Estado
+## 📸 Capturas de Pantalla
 
-Proyecto en desarrollo activo. Semana 1 de 12.
+### Página de Inicio y Reservas
+![Home](./home.png)
 
- Autor
+### Panel de Administrador (Filtro y Reservas)
+![Admin](./admin.png)
 
+## 🚀 Cómo ejecutar este proyecto localmente
 
-
- 
-
-**Cristian Rojas** — Tatuador & Developer en formación
-📍 Colombia
-
----
-
-*Construido con disciplina, café y tinta.* 🖋️
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/cristianmontenegro-dev/inkflow.git
