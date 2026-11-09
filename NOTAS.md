@@ -247,3 +247,14 @@
 - Cómo usar el modo dispositivo en las DevTools del navegador.
 - Cómo diagnosticar y solucionar errores de autenticación en APIs.
 - La importancia de los espacios en blanco en las variables de entorno.
+
+  ## 2026-11-09 — Día 21 (Portafolio y Documentación)
+
+ ✅ Logros
+- Subí capturas de pantalla de la app al repositorio.
+- Actualicé el `README.md` con una descripción profesional, insignias (badges) y las imágenes del proyecto.
+- Solucioné un bloqueo de seguridad de Windows cambiando de PowerShell a Command Prompt.
+
+🧠 Aprendí
+- A documentar un proyecto para que sea atractivo para reclutadores/clientes.
+- Cómo solucionar restricciones de seguridad de Windows en la terminal.
