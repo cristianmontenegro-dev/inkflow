@@ -258,3 +258,14 @@
 🧠 Aprendí
 - A documentar un proyecto para que sea atractivo para reclutadores/clientes.
 - Cómo solucionar restricciones de seguridad de Windows en la terminal.
+
+  ## 2026-11-10 — Día 22 (Gestión de Estados e Historial)
+
+ ✅ Logros
+- Implementé el "Soft Delete" cambiando el estado de las reservas en lugar de borrarlas.
+- Agregué la columna `estado` a la base de datos.
+- Creé el botón "Completar" y la página de "Historial".
+
+ 🧠 Aprendí
+- La importancia de no borrar datos, sino archivar estados.
+- Cómo hacer consultas SQL filtrando por el campo `estado`.
