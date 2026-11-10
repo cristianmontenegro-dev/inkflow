@@ -21,7 +21,6 @@
     <div style="background: #111; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #333; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
       <h3 style="color: white; margin: 0; flex: 1;">Filtrar citas por fecha 📅</h3>
       
-      <!-- AQUÍ ESTÁ EL ID MÁGICO PARA EL RESPONSIVE -->
       <form method="GET" action="/admin" id="admin-filtro-form" style="display: flex; gap: 1rem; align-items: center;">
         <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" style="padding: 0.8rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
         <button type="submit" class="btn btn--primary" style="padding: 0.8rem 1.5rem;">Buscar</button>
@@ -50,19 +49,28 @@
             </div>
             <div class="reserva-meta">
               <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
+              
               <a href="/editar/{{ reserva[0] }}" class="btn-delete" style="background: #333; border: 1px solid #555; color: white; text-decoration: none;">✏️ Editar</a>
+              
+              <!-- BOTÓN DE COMPLETAR -->
+              <a href="/completar/{{ reserva[0] }}" class="btn-delete" style="background: #1b4332; border: 1px solid #2d6a4f; color: #95d5b2; text-decoration: none;">✅ Completar</a>
+              
               <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn-delete">🗑️ Borrar</a>
             </div>
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p class="empty-reservas">No hay reservas para esta fecha.</p>
+      <p class="empty-reservas">No hay reservas pendientes para esta fecha.</p>
     {% endif %}
     
-    <br>
-    <a href="/" style="color: var(--accent); text-decoration: none;">← Volver al inicio público</a>
-    <br><br><hr style="border-color: #333; margin: 2rem 0;"><br>
+    <!-- ENLACES DE NAVEGACIÓN -->
+    <div style="margin-top: 2rem; margin-bottom: 2rem; display: flex; gap: 1.5rem;">
+      <a href="/" style="color: var(--accent); text-decoration: none;">← Volver al inicio público</a>
+      <a href="/historial" style="color: #95d5b2; text-decoration: none;">📜 Ver historial de completadas</a>
+    </div>
+
+    <br><hr style="border-color: #333; margin: 2rem 0;"><br>
 
     <!-- FORMULARIO PARA SUBIR FLASH -->
     <div style="background: #111; padding: 2rem; border-radius: 12px; margin-bottom: 3rem; border: 1px solid #333;">
@@ -74,7 +82,7 @@
       </form>
     </div>
 
-    <!-- LISTA DE FLASHES -->
+    <!-- LISTA DE FLASHES (LIMPIOS) -->
     <h3 style="color: white; margin-bottom: 1rem;">Tus flashes:</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
       {% for flash in lista_flashes %}
