@@ -16,6 +16,7 @@ InkFlow es una aplicación web diseñada para resolver el caos de gestionar cita
 - 🔒 **Panel de Administrador**: Vista privada protegida con contraseña para gestionar las citas.
 - 🔍 **Filtro de Citas**: Búsqueda inteligente de reservas por fecha.
 - 📱 **Diseño Responsivo**: Experiencia perfecta tanto en computadores como en celulares.
+- ✅ **Historial de Citas**: Los tatuajes completados se archivan automáticamente para mantener un registro.
 
 ## 🛠️ Stack Tecnológico
 
