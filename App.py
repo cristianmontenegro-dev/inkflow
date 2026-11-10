@@ -7,28 +7,27 @@ import cloudinary.uploader
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'inkflow_super_secreto_2026')
 
-# --- CONFIGURACIÓN DE CLOUDINARY ---
 cloudinary.config( 
   cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'tgzwbtsk'), 
   api_key = os.environ.get('CLOUDINARY_API_KEY', '126599169651419'), 
-  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'Yz9hq1hLx06VMgLYCgXI8HvNss'), # Recuerda poner tu secreto real local
+  api_secret = os.environ.get('CLOUDINARY_API_SECRET', 'TU_SECRETO_AQUI'), 
   secure = True
 )
 
 def init_db():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # Tabla Reservas
+    # TABLA ACTUALIZADA: Agregamos la columna "estado"
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS reservas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
             idea TEXT NOT NULL,
             fecha TEXT NOT NULL,
-            hora TEXT NOT NULL
+            hora TEXT NOT NULL,
+            estado TEXT DEFAULT 'pendiente'
         )
     ''')
-    # Tabla Flashes
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS flashes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,7 +62,6 @@ def reservar():
                    (nombre_cliente, idea_cliente, fecha_cliente, hora_cliente))
     conn.commit()
     conn.close()
-    
     return redirect(url_for('inicio'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -86,32 +84,57 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
-# --- RUTA DE ADMINISTRADOR (CON FILTRO POR FECHA) ---
+# --- RUTA DE ADMINISTRADOR (Filtro + Pendientes) ---
 @app.route('/admin')
 def admin():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     
-    # Atrapamos la fecha del filtro
     fecha_filtro = request.args.get('fecha')
-    
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     
+    # Solo traemos las que están en estado 'pendiente'
     if fecha_filtro:
-        # Si hay fecha, traemos SOLO las reservas de ese día
-        cursor.execute("SELECT * FROM reservas WHERE fecha = ?", (fecha_filtro,))
+        cursor.execute("SELECT * FROM reservas WHERE fecha = ? AND estado = 'pendiente'", (fecha_filtro,))
     else:
-        # Si no hay fecha, traemos TODAS
-        cursor.execute("SELECT * FROM reservas")
+        cursor.execute("SELECT * FROM reservas WHERE estado = 'pendiente'")
         
     reservas = cursor.fetchall()
-    
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     conn.close()
     
     return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes, fecha_filtro=fecha_filtro)
+
+# --- NUEVA RUTA: COMPLETAR CITA ---
+@app.route('/completar/<int:id>')
+def completar(id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    # En vez de borrar, actualizamos el estado
+    cursor.execute("UPDATE reservas SET estado = 'completada' WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin'))
+
+# --- NUEVA RUTA: VER HISTORIAL ---
+@app.route('/historial')
+def historial():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    # Traemos las que ya están completadas
+    cursor.execute("SELECT * FROM reservas WHERE estado = 'completada'")
+    completadas = cursor.fetchall()
+    conn.close()
+    
+    return render_template('historial.html', lista_completadas=completadas)
 
 @app.route('/borrar/<int:id>')
 def borrar(id):
