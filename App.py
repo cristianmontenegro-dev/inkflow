@@ -84,7 +84,7 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
-# --- RUTA DE ADMINISTRADOR (Filtro + Pendientes) ---
+# --- RUTA DE ADMINISTRADOR (Filtro + Pendientes + Estadísticas) ---
 @app.route('/admin')
 def admin():
     if not session.get('logged_in'):
@@ -94,18 +94,33 @@ def admin():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     
-    # Solo traemos las que están en estado 'pendiente'
+    # 1. Traemos las reservas (con o sin filtro)
     if fecha_filtro:
         cursor.execute("SELECT * FROM reservas WHERE fecha = ? AND estado = 'pendiente'", (fecha_filtro,))
     else:
         cursor.execute("SELECT * FROM reservas WHERE estado = 'pendiente'")
-        
     reservas = cursor.fetchall()
+    
+    # 2. Contamos las pendientes
+    cursor.execute("SELECT COUNT(*) FROM reservas WHERE estado = 'pendiente'")
+    total_pendientes = cursor.fetchone()[0]
+    
+    # 3. Contamos las completadas
+    cursor.execute("SELECT COUNT(*) FROM reservas WHERE estado = 'completada'")
+    total_completadas = cursor.fetchone()[0]
+    
+    # 4. Traemos los flashes
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     conn.close()
     
-    return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes, fecha_filtro=fecha_filtro)
+    # Le pasamos TODOS los datos al HTML
+    return render_template('admin.html', 
+                           lista_reservas=reservas, 
+                           lista_flashes=flashes, 
+                           fecha_filtro=fecha_filtro,
+                           total_pendientes=total_pendientes,
+                           total_completadas=total_completadas)
 
 # --- NUEVA RUTA: COMPLETAR CITA ---
 @app.route('/completar/<int:id>')
