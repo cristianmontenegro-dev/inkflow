@@ -269,3 +269,15 @@
  🧠 Aprendí
 - La importancia de no borrar datos, sino archivar estados.
 - Cómo hacer consultas SQL filtrando por el campo `estado`.
+
+## 2026-11-11 — Día 23 (Dashboard de Estadísticas)
+
+ ✅ Logros
+- Implementé tarjetas de resumen en el panel de administrador.
+- Usé el comando `COUNT()` de SQL para contar citas pendientes y completadas.
+- El panel ahora muestra métricas en tiempo real.
+
+ 🧠 Aprendí
+- A usar funciones de agregación en SQL (`COUNT`).
+- A estructurar un Dashboard visual con CSS Grid.
+- Cómo calcular datos en el backend y mostrarlos en el frontend.
