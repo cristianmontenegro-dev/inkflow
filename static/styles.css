@@ -594,3 +594,115 @@ section {
     width: 100%;
   }
 }
+/* ===========================
+   ✨ TOQUES PREMIUM Y ANIMACIONES
+   =========================== */
+
+/* Animación de entrada para el Hero */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__title {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.hero__subtitle {
+  animation: fadeInUp 1s ease-out forwards;
+  animation-delay: 0.2s; /* Un poquito de retraso para que salga después del título */
+  opacity: 0; /* Empieza invisible */
+}
+
+.hero__buttons {
+  animation: fadeInUp 1.2s ease-out forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+/* 1. Botones Premium (Levantamiento y Brillo) */
+.btn {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.02); /* Se levanta y crece 2% */
+  box-shadow: 0 10px 25px rgba(230, 57, 70, 0.4); /* Sombra más fuerte */
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.98); /* Efecto de que se "presiona" */
+}
+
+/* 2. Tarjetas de la Galería (Efecto Zoom e Iluminación) */
+.card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid var(--border-subtle);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+  border-color: var(--accent);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 57, 70, 0.15); /* Doble sombra */
+}
+
+/* La imagen dentro de la tarjeta hace un mini-zoom */
+.card img {
+  transition: transform 0.5s ease;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+/* 3. Inputs del Formulario (Foco Brillante) */
+.contact-form-section input {
+  transition: all 0.3s ease;
+}
+
+.contact-form-section input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.2); /* Halo de luz rojo */
+  background: rgba(20, 20, 25, 0.9); /* Fondo un poquito más claro */
+}
+
+/* 4. Enlaces del Menú (Línea que crece) */
+.nav__links a {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.nav__links a:hover::after {
+  width: 100%; /* La línea crece de izquierda a derecha */
+}
+
+/* 5. Botones del Admin y Tablas */
+.btn-delete, .reserva-item {
+  transition: all 0.3s ease;
+}
+
+.reserva-item:hover {
+  transform: translateX(5px);
+  border-left: 3px solid var(--accent);
+  background: rgba(30, 30, 35, 0.8);
+}
