@@ -281,3 +281,15 @@
 - A usar funciones de agregación en SQL (`COUNT`).
 - A estructurar un Dashboard visual con CSS Grid.
 - Cómo calcular datos en el backend y mostrarlos en el frontend.
+
+  ## 2026-11-12 — Día 24 (Toque Premium y Animaciones)
+
+ ✅ Logros
+- Agregué animaciones de entrada (fadeInUp) al Hero.
+- Implementé micro-interacciones (hover) en botones, tarjetas e inputs.
+- La app ahora tiene una sensación visual de nivel profesional.
+
+ 🧠 Aprendí
+- Uso de `@keyframes` en CSS para animaciones.
+- Aplicación de `transform`, `transition` y `box-shadow` para efectos de profundidad.
+- La importancia de las micro-interacciones en la experiencia de usuario (UX).
