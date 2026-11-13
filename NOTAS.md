@@ -293,3 +293,14 @@
 - Uso de `@keyframes` en CSS para animaciones.
 - Aplicación de `transform`, `transition` y `box-shadow` para efectos de profundidad.
 - La importancia de las micro-interacciones en la experiencia de usuario (UX).
+
+  ## 2026-11-13 — Día 25 (Botón de WhatsApp y 100 Commits)
+
+ ✅ Logros
+- Integré el botón flotante de WhatsApp con mi número real.
+- Agregué animaciones CSS (pulso y hover) al botón.
+- Alcanzamos los 100 commits en el repositorio.
+
+ 🧠 Aprendí
+- A usar la API de WhatsApp (wa.me) para generar enlaces de contacto.
+- A crear animaciones infinitas con CSS (@keyframes).
