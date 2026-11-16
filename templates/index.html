@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InkFlow — Reservas y drops para tatuadores</title>
+  
+  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <nav class="nav">
+    <div class="nav__logo">InkFlow</div>
+    <ul class="nav__links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#trazo">Progreso</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#reservar">Reservas</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <h1 class="hero__title">Del primer trazo<br>a tu primer cliente.</h1>
+    <p class="hero__subtitle">
+      InkFlow es el sistema de reservas, drops y seguimiento para tatuadores
+      que están construyendo su camino con disciplina y arte.
+    </p>
+    <div class="hero__buttons">
+      <a href="#features" class="btn btn--primary">Ver features</a>
+      <a href="#trazo" class="btn btn--ghost">Mi progreso</a>
+    </div>
+  </header>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <h2 class="section-title">Lo que viene</h2>
+    <p class="section-subtitle">Herramientas diseñadas para profesionales de la tinta</p>
+    <div class="features__grid">
+      <article class="card">
+        <div class="card__icon">🎨</div>
+        <h3>Galería de flash</h3>
+        <p>Sube tus diseños, organízalos por estilo y muéstralos al mundo con un look impecable.</p>
+      </article>
+      <article class="card">
+        <div class="card__icon">⏰</div>
+        <h3>Drops con countdown</h3>
+        <p>Programa cuándo se libera tu flash y crea expectativa real en tu comunidad.</p>
+      </article>
+      <article class="card">
+        <div class="card__icon">📅</div>
+        <h3>Reservas con depósito</h3>
+        <p>Se acabó que te dejen plantado. El cliente confirma su cita con pago previo.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- GALERÍA DE FLASHES (CON CLOUDINARY) -->
+  <section class="features" id="galeria" style="padding-top: 0;">
+    <h2 class="section-title">Galería de Flash</h2>
+    <p class="section-subtitle">Diseños exclusivos listos para tatuar</p>
+    
+    {% if lista_flashes %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; padding: 0 5%;">
+      {% for flash in lista_flashes %}
+        <div class="card" style="padding: 1rem; text-align: center;">
+          <img src="{{ flash[2] }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
+          <h3 style="color: white; font-size: 1.1rem;">{{ flash[1] }}</h3>
+        </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <p style="text-align: center; color: var(--text-muted);">Pronto subiré nuevos diseños.</p>
+    {% endif %}
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="timeline" id="trazo">
+    <h2 class="section-title">Mis primeros trazos</h2>
+    <p class="section-subtitle">Papel → Piel sintética → Piel real</p>
+    <div class="timeline__container">
+      <div class="timeline__item timeline__item--active">
+        <span class="timeline__dot"></span>
+        <h4>Fase 1: Papel</h4>
+        <p>Dibujo y trazo sobre papel. Fundamentos y control de pulso.</p>
+      </div>
+      <div class="timeline__item">
+        <span class="timeline__dot"></span>
+        <h4>Fase 2: Piel sintética</h4>
+        <p>Práctica con máquina en piel fake / frutas para dominar voltaje y profundidad.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULARIO DE RESERVA (CON FECHA Y HORA) -->
+  <div style="padding: 2rem 5%;">
+    <section class="contact-form-section" id="reservar">
+      <h2 class="section-title" style="margin-bottom: 0.5rem;">Reserva tu cita</h2>
+      <p style="color: var(--text-muted); text-align: center;">Cuéntame qué tienes en mente y nos ponemos en contacto.</p>
+      
+            <form action="/reservar" method="POST">
+        <!-- maxlength limita los caracteres para que no metan textos gigantes -->
+        <input type="text" name="nombre" placeholder="Tu nombre" required maxlength="100">
+        <input type="text" name="idea" placeholder="Idea del tatuaje (ej: un león en el antebrazo)" required maxlength="300">
+        
+        <div style="display: flex; gap: 1rem;">
+          <!-- min evita elegir fechas anteriores -->
+          <input type="date" name="fecha" required min="2026-01-01" style="flex: 1;">
+          <input type="time" name="hora" required style="flex: 1;">
+        </div>
+
+        <button type="submit" class="btn btn--primary" style="margin-top: 0.5rem; width: 100%;">Enviar Reserva</button>
+      </form>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contacto">
+    <p>Construido con disciplina, café y tinta 🖋️</p>
+    <p class="footer__author">Cristian Rojas — Tatuador & Developer en formación</p>
+    <p class="footer__social">
+      <a href="https://instagram.com/cristian_rojas328" target="_blank">📸 Sígueme en Instagram</a>
+    </p>
+  </footer>
+    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+  <a href="https://wa.me/573219341966?text=Hola%20Cristian,%20vengo%20de%20InkFlow%20y%20quiero%20cotizar%20un%20tatuaje" 
+     target="_blank" 
+     class="whatsapp-btn" 
+     title="¡Escríbeme por WhatsApp!">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="35" height="35">
+      <path d="M12.031 0C5.406 0 0 5.406 0 12.031c0 2.115.546 4.104 1.503 5.838L.081 24l6.299-1.65c1.693.922 3.62 1.437 5.651 1.437 6.625 0 12.031-5.406 12.031-12.031S18.656 0 12.031 0zm6.842 17.143c-.281.787-1.406 1.504-2.156 1.575-.75.07-1.481.351-4.219-.844-3.375-1.469-5.531-4.875-5.719-5.109-.188-.234-1.406-1.875-1.406-3.562 0-1.687.881-2.531 1.219-2.859.338-.328.75-.422 1.031-.422.281 0 .562 0 .797.011.256.011.599-.099.938.721.353.855 1.159 2.834 1.266 3.047.105.211.176.459.035.741-.14.281-.211.459-.422.703-.211.244-.443.545-.633.732-.211.211-.431.443-.187.865.244.422 1.084 1.781 2.322 2.885 1.598 1.429 2.94 1.875 3.361 2.088.422.211.668.176.915-.106.244-.281 1.054-1.23 1.335-1.652.281-.422.562-.351.938-.211.375.14 2.391 1.125 2.801 1.336.41.211.682.316.782.486.099.17.099.986-.182 1.773z"/>
+    </svg>
+  </a>
+
+</body>
+</html>

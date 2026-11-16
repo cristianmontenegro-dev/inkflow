@@ -1,0 +1,4 @@
+# Ignorar base de datos local
+inkflow.db
+*.db
+__pycache__/

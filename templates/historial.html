@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial — InkFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body style="padding-top: 5rem;">
+  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h1 class="section-title" style="text-align: left; margin-bottom: 0;">📜 Historial de Citas</h1>
+      <a href="/admin" style="background: #333; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; border: 1px solid #555;">← Volver al Panel</a>
+    </div>
+    <p style="color: var(--text-muted); margin-bottom: 2rem; margin-top: 1rem;">Aquí están los tatuajes que ya completaste.</p>
+
+    {% if lista_completadas %}
+      <ul class="reservas-list">
+        {% for reserva in lista_completadas %}
+          <li class="reserva-item" style="opacity: 0.8;">
+            <div class="reserva-info">
+              <span class="reserva-name">{{ reserva[1] }}</span>
+              <span class="reserva-idea">{{ reserva[2] }}</span>
+              <span style="color: #95d5b2; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">
+                ✅ Completado | 📅 {{ reserva[3] }} a las 🕒 {{ reserva[4] }}
+              </span>
+            </div>
+            <div class="reserva-meta">
+              <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
+              <!-- Botón para borrar del historial definitivamente -->
+              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar del historial permanentemente?');" class="btn-delete">🗑️ Borrar</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="empty-reservas">Aún no has completado ningún tatuaje. ¡A darle a la máquina!</p>
+    {% endif %}
+
+  </div>
+</body>
+</html>

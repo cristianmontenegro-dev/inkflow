@@ -1,0 +1,758 @@
+/* ===========================
+   INKFLOW — Estilos Globales
+   =========================== */
+
+:root {
+  --bg-deep: #070709;
+  --bg-card: rgba(18, 18, 24, 0.75);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(230, 57, 70, 0.4);
+  --accent: #e63946;
+  --accent-glow: rgba(230, 57, 70, 0.25);
+  --text-main: #f4f4f6;
+  --text-muted: #9494a0;
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Fondo ambiental con destello sutil */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(230, 57, 70, 0.08) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* NAVEGACIÓN */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 5%;
+  background: rgba(7, 7, 9, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  z-index: 1000;
+}
+
+.nav__logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 30%, var(--accent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.nav__links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  align-items: center;
+}
+
+.nav__links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.nav__links a:hover {
+  color: var(--text-main);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* HERO */
+.hero {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8rem 5% 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero__title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1.5px;
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-muted);
+  max-width: 650px;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+
+.hero__buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* BOTONES */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 2rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: var(--transition);
+  cursor: pointer;
+  border: none;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+.btn--primary:hover {
+  background: #ff4d5e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(230, 57, 70, 0.4);
+}
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(8px);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* SECCIONES COMUNES */
+section {
+  padding: 6rem 5%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  letter-spacing: -1px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 3.5rem;
+}
+
+/* FEATURES */
+.features__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  transition: var(--transition);
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card__icon {
+  font-size: 2.2rem;
+  margin-bottom: 1.25rem;
+  display: inline-block;
+  padding: 0.75rem;
+  background: rgba(230, 57, 70, 0.08);
+  border-radius: 14px;
+  border: 1px solid rgba(230, 57, 70, 0.15);
+}
+
+.card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* TIMELINE */
+.timeline__container {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.timeline__container::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 23px;
+  width: 2px;
+  background: var(--border-subtle);
+}
+
+.timeline__item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.75rem 1.75rem 1.75rem 4rem;
+  position: relative;
+  backdrop-filter: blur(12px);
+  transition: var(--transition);
+}
+
+.timeline__item:hover {
+  border-color: var(--border-hover);
+  transform: translateX(4px);
+}
+
+.timeline__dot {
+  position: absolute;
+  left: 19px;
+  top: 2.2rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  border: 2px solid var(--bg-deep);
+  transition: var(--transition);
+}
+
+.timeline__item--active {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(230, 57, 70, 0.05), var(--bg-card));
+}
+
+.timeline__item--active .timeline__dot {
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  transform: scale(1.2);
+}
+
+.timeline__item h4 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.timeline__item p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+/* FORMULARIO DE RESERVA */
+.contact-form-section {
+  max-width: 650px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 3.5rem 3rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.contact-form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.contact-form-section input {
+  width: 100%;
+  padding: 1.1rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(10, 10, 13, 0.8);
+  color: white;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: var(--transition);
+  outline: none;
+}
+
+.contact-form-section input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.contact-form-section input::placeholder {
+  color: var(--text-muted);
+}
+
+/* PANEL DE CONTROL / LISTA DE RESERVAS */
+.reservas-section {
+  max-width: 750px;
+  margin: 4rem auto 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  padding: 3rem;
+  backdrop-filter: blur(16px);
+}
+
+.reservas-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.reserva-item {
+  background: rgba(10, 10, 13, 0.6);
+  border: 1px solid var(--border-subtle);
+  padding: 1.25rem 1.5rem;
+  border-radius: 14px;
+  color: var(--text-main);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.reserva-item:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(10, 10, 13, 0.9);
+}
+
+.reserva-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.reserva-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.reserva-idea {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.reserva-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.reserva-id-badge {
+  color: var(--accent);
+  font-size: 0.75rem;
+  background: rgba(230, 57, 70, 0.1);
+  border: 1px solid rgba(230, 57, 70, 0.2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.btn-delete {
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-delete:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.empty-reservas {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem 0;
+  font-style: italic;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 5rem 5% 3rem;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 6rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer__author {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.footer__social a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.footer__social a:hover {
+  text-decoration: underline;
+  filter: brightness(1.2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav__links {
+    display: none;
+  }
+  .contact-form-section, .reservas-section {
+    padding: 2rem 1.5rem;
+  }
+  .reserva-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .reserva-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ===========================
+   RESPONSIVE DESIGN (MÓVILES)
+   =========================== */
+
+@media (max-width: 768px) {
+  /* 1. Navegación */
+  .nav {
+    padding: 1rem 5%;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .nav__links {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav__links a {
+    font-size: 0.85rem;
+  }
+
+  /* 2. Hero y Títulos */
+  .hero {
+    padding: 10rem 5% 4rem;
+  }
+  .hero__title {
+    font-size: 2.5rem;
+  }
+  .hero__buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero__buttons .btn {
+    width: 100%;
+  }
+
+  /* 3. Secciones y Grids */
+  .features__grid {
+    grid-template-columns: 1fr; /* Una sola columna en celular */
+  }
+  section {
+    padding: 4rem 5%;
+  }
+
+  /* 4. Galería de Flashes */
+  #galeria > div {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    padding: 0 !important;
+  }
+
+  /* 5. Formulario */
+  .contact-form-section {
+    padding: 2rem 1.5rem;
+  }
+  /* Esto hace que los inputs de Fecha y Hora se pongan uno debajo del otro */
+  .contact-form-section form > div {
+    flex-direction: column;
+  }
+
+  /* 6. Panel de Administrador */
+  .reserva-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .reserva-meta {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  /* Filtro de fecha en admin */
+  #admin-filtro-form {
+    flex-direction: column;
+    width: 100%;
+  }
+  #admin-filtro-form input, #admin-filtro-form button {
+    width: 100%;
+  }
+}
+/* ===========================
+   ✨ TOQUES PREMIUM Y ANIMACIONES
+   =========================== */
+
+/* Animación de entrada para el Hero */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__title {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.hero__subtitle {
+  animation: fadeInUp 1s ease-out forwards;
+  animation-delay: 0.2s; /* Un poquito de retraso para que salga después del título */
+  opacity: 0; /* Empieza invisible */
+}
+
+.hero__buttons {
+  animation: fadeInUp 1.2s ease-out forwards;
+  animation-delay: 0.4s;
+  opacity: 0;
+}
+
+/* 1. Botones Premium (Levantamiento y Brillo) */
+.btn {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.02); /* Se levanta y crece 2% */
+  box-shadow: 0 10px 25px rgba(230, 57, 70, 0.4); /* Sombra más fuerte */
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.98); /* Efecto de que se "presiona" */
+}
+
+/* 2. Tarjetas de la Galería (Efecto Zoom e Iluminación) */
+.card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid var(--border-subtle);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+  border-color: var(--accent);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(230, 57, 70, 0.15); /* Doble sombra */
+}
+
+/* La imagen dentro de la tarjeta hace un mini-zoom */
+.card img {
+  transition: transform 0.5s ease;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+/* 3. Inputs del Formulario (Foco Brillante) */
+.contact-form-section input {
+  transition: all 0.3s ease;
+}
+
+.contact-form-section input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.2); /* Halo de luz rojo */
+  background: rgba(20, 20, 25, 0.9); /* Fondo un poquito más claro */
+}
+
+/* 4. Enlaces del Menú (Línea que crece) */
+.nav__links a {
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.nav__links a:hover::after {
+  width: 100%; /* La línea crece de izquierda a derecha */
+}
+
+/* 5. Botones del Admin y Tablas */
+.btn-delete, .reserva-item {
+  transition: all 0.3s ease;
+}
+
+.reserva-item:hover {
+  transform: translateX(5px);
+  border-left: 3px solid var(--accent);
+  background: rgba(30, 30, 35, 0.8);
+}
+
+/* ===========================
+   BOTÓN FLOTANTE DE WHATSAPP
+   =========================== */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #25D366; /* Verde oficial de WhatsApp */
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  animation: pulse-whatsapp 2s infinite;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.1) rotate(5deg); /* Se agranda y gira un poquito al pasar el mouse */
+  background-color: #128C7E; /* Un verde más oscuro */
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+/* Animación de pulso */
+@keyframes pulse-whatsapp {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* En celular, lo hacemos un poquito más pequeño para que no estorbe */
+@media (max-width: 768px) {
+  .whatsapp-btn {
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
