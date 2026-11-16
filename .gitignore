@@ -1,4 +1,17 @@
 # Ignorar base de datos local
 inkflow.db
 *.db
+
+# Ignorar entorno virtual (si lo tienes)
+venv/
+.venv/
+env/
+ENV/
+
+# Ignorar archivos de Python
 __pycache__/
+*.pyc
+
+# Ignorar archivos del sistema
+.DS_Store
+Thumbs.db

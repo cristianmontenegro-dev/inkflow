@@ -304,3 +304,15 @@
  🧠 Aprendí
 - A usar la API de WhatsApp (wa.me) para generar enlaces de contacto.
 - A crear animaciones infinitas con CSS (@keyframes).
+
+## 2026-11-16 — Día 26 (Validación, Seguridad y Git en VS Code)
+
+ ✅ Logros
+- Implementé validación de fechas y longitud de texto (Front y Backend).
+- Creé una página de error 404 personalizada.
+- Conecté VS Code con GitHub y resolví mi primer conflicto de merge.
+
+🧠 Aprendí
+- A usar `@app.errorhandler(404)` para manejar errores.
+- Cómo funciona `git pull`, `git commit` y `git push`.
+- A resolver conflictos quedándome con la versión local.
