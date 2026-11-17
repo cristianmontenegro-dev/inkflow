@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 import os
 import cloudinary
@@ -56,13 +56,14 @@ def reservar():
     fecha_cliente = request.form.get('fecha')
     hora_cliente = request.form.get('hora')
     
-    # --- VALIDACIONES DE SEGURIDAD ---
     hoy = datetime.now().strftime('%Y-%m-%d')
     if fecha_cliente < hoy:
-        return "❌ Error: No puedes reservar en el pasado. <a href='/'>Volver</a>", 400
+        flash('❌ Error: No puedes reservar en el pasado.', 'error')
+        return redirect(url_for('inicio'))
         
     if len(nombre_cliente) > 100 or len(idea_cliente) > 300:
-         return "❌ Error: El texto es demasiado largo. <a href='/'>Volver</a>", 400
+        flash('❌ Error: El texto es demasiado largo.', 'error')
+        return redirect(url_for('inicio'))
 
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
@@ -71,6 +72,7 @@ def reservar():
     conn.commit()
     conn.close()
     
+    flash('¡Tu cita ha sido agendada con éxito! 🖤', 'success')
     return redirect(url_for('inicio'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,17 +85,20 @@ def login():
         
         if usuario == usuario_correcto and contrasena == contrasena_correcta:
             session['logged_in'] = True
+            flash('¡Bienvenido al panel de administración!', 'success')
             return redirect(url_for('admin'))
         else:
-            return render_template('login.html', error="Usuario o contraseña incorrectos")
+            flash('Usuario o contraseña incorrectos. 🚫', 'error')
+            return redirect(url_for('login'))
+            
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    flash('Has cerrado sesión correctamente. 🔒', 'success')
     return redirect(url_for('login'))
 
-# --- RUTA DE ADMINISTRADOR (Filtro + Pendientes + Estadísticas) ---
 @app.route('/admin')
 def admin():
     if not session.get('logged_in'):
@@ -108,10 +113,10 @@ def admin():
     else:
         cursor.execute("SELECT * FROM reservas WHERE estado = 'pendiente'")
     reservas = cursor.fetchall()
-
+    
     cursor.execute("SELECT COUNT(*) FROM reservas WHERE estado = 'pendiente'")
     total_pendientes = cursor.fetchone()[0]
- 
+    
     cursor.execute("SELECT COUNT(*) FROM reservas WHERE estado = 'completada'")
     total_completadas = cursor.fetchone()[0]
     
@@ -119,40 +124,31 @@ def admin():
     flashes = cursor.fetchall()
     conn.close()
     
-    return render_template('admin.html', 
-                           lista_reservas=reservas, 
-                           lista_flashes=flashes, 
-                           fecha_filtro=fecha_filtro,
-                           total_pendientes=total_pendientes,
+    return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes, 
+                           fecha_filtro=fecha_filtro, total_pendientes=total_pendientes, 
                            total_completadas=total_completadas)
 
-# --- NUEVA RUTA: COMPLETAR CITA ---
 @app.route('/completar/<int:id>')
 def completar(id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # En vez de borrar, actualizamos el estado
     cursor.execute("UPDATE reservas SET estado = 'completada' WHERE id = ?", (id,))
     conn.commit()
     conn.close()
+    flash('¡Tatuaje marcado como completado! ✅', 'success')
     return redirect(url_for('admin'))
 
-# --- NUEVA RUTA: VER HISTORIAL ---
 @app.route('/historial')
 def historial():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # Traemos las que ya están completadas
     cursor.execute("SELECT * FROM reservas WHERE estado = 'completada'")
     completadas = cursor.fetchall()
     conn.close()
-    
     return render_template('historial.html', lista_completadas=completadas)
 
 @app.route('/borrar/<int:id>')
@@ -164,6 +160,7 @@ def borrar(id):
     cursor.execute("DELETE FROM reservas WHERE id = ?", (id,))
     conn.commit()
     conn.close()
+    flash('Reserva eliminada. 🗑️', 'success')
     return redirect(url_for('admin')) 
 
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
@@ -182,6 +179,7 @@ def editar(id):
                        (nuevo_nombre, nueva_idea, nueva_fecha, nueva_hora, id))
         conn.commit()
         conn.close()
+        flash('Reserva actualizada correctamente. ✏️', 'success')
         return redirect(url_for('admin'))
     else:
         cursor.execute("SELECT * FROM reservas WHERE id = ?", (id,))
@@ -203,6 +201,7 @@ def subir_flash():
         cursor.execute("INSERT INTO flashes (titulo, imagen) VALUES (?, ?)", (titulo, url_imagen))
         conn.commit()
         conn.close()
+        flash('¡Flash subido con éxito! 🎨', 'success')
     return redirect(url_for('admin'))
 
 @app.route('/borrar_flash/<int:id>')
@@ -214,9 +213,9 @@ def borrar_flash(id):
     cursor.execute("DELETE FROM flashes WHERE id = ?", (id,))
     conn.commit()
     conn.close()
+    flash('Flash eliminado. 🗑️', 'success')
     return redirect(url_for('admin'))
 
-# --- MANEJO DE ERRORES 404 ---
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404

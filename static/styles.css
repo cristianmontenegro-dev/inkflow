@@ -756,3 +756,37 @@ section {
     right: 20px;
   }
 }
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.flash-message {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  animation: slideInDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+}
+
+.flash-message.success {
+  background: #1b4332;
+  border-left: 4px solid #95d5b2;
+}
+
+.flash-message.error {
+  background: #4a0e0e;
+  border-left: 4px solid var(--accent);
+}
