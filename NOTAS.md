@@ -316,3 +316,15 @@
 - A usar `@app.errorhandler(404)` para manejar errores.
 - Cómo funciona `git pull`, `git commit` y `git push`.
 - A resolver conflictos quedándome con la versión local.
+
+## 2026-11-17 — Día 27 (Feedback al Usuario y Flash Messages)
+
+ ✅ Logros
+- Implementé el sistema de mensajes flash en Flask.
+- Agregué animaciones CSS (slideInDown) para las notificaciones.
+- Mejoré la experiencia de usuario mostrando errores y éxitos sin recargar la página.
+
+ 🧠 Aprendí
+- A usar la función `flash()` de Flask.
+- A manejar mensajes temporales con `get_flashed_messages()`.
+- La importancia del feedback visual en el diseño de interfaces (UX).
