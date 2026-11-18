@@ -46,6 +46,9 @@
         {% endif %}
       </form>
     </div>
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+      <a href="/exportar" class="btn btn--ghost" style="font-size: 0.85rem; padding: 0.5rem 1rem;">📥 Exportar Reservas (.txt)</a>
+    </div>
 
     {% if fecha_filtro %}
       <p style="color: var(--accent); margin-bottom: 1rem; font-weight: 600;">Mostrando citas del día: {{ fecha_filtro }}</p>

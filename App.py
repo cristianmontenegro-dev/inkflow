@@ -220,6 +220,31 @@ def borrar_flash(id):
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404
 
+from flask import Response
+import io
+
+@app.route('/exportar')
+def exportar():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+        
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT nombre, idea, fecha, hora, estado FROM reservas")
+    reservas = cursor.fetchall()
+    conn.close()
+    
+    output = io.StringIO()
+    output.write("=== REPORTE DE RESERVAS INKFLOW ===\n\n")
+    for r in reservas:
+        output.write(f"Cliente: {r[0]} | Idea: {r[1]} | Fecha: {r[2]} {r[3]} | Estado: {r[4]}\n")
+        
+    return Response(
+        output.getvalue(),
+        mimetype="text/plain",
+        headers={"Content-Disposition": "attachment;filename=reservas_inkflow.txt"}
+    )
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
