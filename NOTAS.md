@@ -272,7 +272,7 @@ Aprendí
 
 ## 2026-11-11 — Día 23 (Dashboard de Estadísticas)
 
- ✅ Logros
+ Logros
 - Implementé tarjetas de resumen en el panel de administrador.
 - Usé el comando `COUNT()` de SQL para contar citas pendientes y completadas.
 - El panel ahora muestra métricas en tiempo real.
@@ -328,3 +328,16 @@ Aprendí
 - A usar la función `flash()` de Flask.
 - A manejar mensajes temporales con `get_flashed_messages()`.
 - La importancia del feedback visual en el diseño de interfaces (UX).
+
+## 2026-11-19 — Día 29 (Limpieza, Seguridad y Documentación)
+
+Logros
+- Eliminé archivos obsoletos del proyecto (`calculadora.py`, `estadisticas.py`, etc.).
+- Restauré la carpeta `static` y el archivo `styles.css` tras un borrado accidental.
+- Actualicé el `README.md` con las nuevas características del proyecto.
+- Verifiqué la seguridad de las rutas de administrador en modo incógnito.
+
+ Aprendí
+- La importancia de la "higiene del código" (mantener el repositorio limpio).
+- Cómo usar Git y GitHub para recuperar archivos borrados accidentalmente.
+- La importancia de documentar el proyecto para que otros (o yo en el futuro) entiendan cómo funciona.

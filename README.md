@@ -1,24 +1,28 @@
-# 🖤 InkFlow
+# InkFlow
 
 > **El sistema de reservas y drops para tatuadores independientes.**
 > *Del primer trazo a tu primer cliente.*
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Visitar_App-e63946?style=for-the-badge&logo=render)](https://inkflow-fpcn.onrender.com)
 
-## 🎯 ¿Qué es InkFlow?
+ ¿Qué es InkFlow?
 
-InkFlow es una aplicación web diseñada para resolver el caos de gestionar citas por Instagram DMs. Permite a los tatuadores independientes mostrar su galería de diseños (flashes), gestionar reservas con fecha y hora exactas, y administrar todo desde un panel privado y seguro.
+InkFlow es una aplicación web diseñada para resolver el caos de gestionar citas por Instagram DMs. Permite a los tatuadores independientes mostrar su galería de diseños (flashes), gestionar reservas con fecha y hora exactas, y administrar todo desde un panel privado y seguro. 
 
-## ✨ Características Principales
+Características Principales
 
-- 🎨 **Galería de Flash**: Subida de imágenes a la nube (Cloudinary) para mostrar los diseños a los clientes.
-- 📅 **Sistema de Reservas**: Los clientes eligen el día y la hora exacta para su cita.
-- 🔒 **Panel de Administrador**: Vista privada protegida con contraseña para gestionar las citas.
-- 🔍 **Filtro de Citas**: Búsqueda inteligente de reservas por fecha.
-- 📱 **Diseño Responsivo**: Experiencia perfecta tanto en computadores como en celulares.
-- ✅ **Historial de Citas**: Los tatuajes completados se archivan automáticamente para mantener un registro.
+- **Galería de Flash**: Subida de imágenes a la nube (Cloudinary) para mostrar los diseños a los clientes.
+- **Sistema de Reservas**: Los clientes eligen el día y la hora exacta para su cita.
+- **Panel de Administrador**: Vista privada protegida con contraseña para gestionar las citas.
+- **Filtro de Citas**: Búsqueda inteligente de reservas por fecha.
+- **Diseño Responsivo**: Experiencia perfecta tanto en computadores como en celulares.
+- **Mensajes Flash**: Feedback visual inmediato al usuario (éxito/error).
+- **Dashboard de Estadísticas**: Contadores en tiempo real de citas pendientes y completadas.
+- **Exportación de Datos**: Descarga de reportes en formato `.txt`.
+- **Página 404 Personalizada**: Manejo elegante de errores.
+- **Botón de WhatsApp**: Contacto directo y flotante para clientes.
 
-## 🛠️ Stack Tecnológico
+Stack Tecnológico
 
 - **Backend**: Python, Flask
 - **Base de Datos**: SQLite
@@ -26,16 +30,18 @@ InkFlow es una aplicación web diseñada para resolver el caos de gestionar cita
 - **Almacenamiento**: Cloudinary (Imágenes)
 - **Despliegue**: Render
 
-## 📸 Capturas de Pantalla
+ Capturas de Pantalla
 
-### Página de Inicio y Reservas
+## Página de Inicio y Reservas
 ![Home](./home.png)
 
-### Panel de Administrador (Filtro y Reservas)
+## Panel de Administrador (Filtro y Reservas)
 ![Admin](./admin.png)
 
-## 🚀 Cómo ejecutar este proyecto localmente
+# Cómo ejecutar este proyecto localmente
+
 
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/cristianmontenegro-dev/inkflow.git
+
