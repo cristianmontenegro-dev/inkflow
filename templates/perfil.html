@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body style="padding-top: 5rem;">
+  
+  <!-- CONTENEDOR DE MENSAJES FLASH -->
+  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
   <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
@@ -17,7 +31,7 @@
 
     <!-- FORMULARIO DE BÚSQUEDA -->
     <div style="background: #111; padding: 2rem; border-radius: 12px; border: 1px solid #333; margin-bottom: 2rem;">
-      <h3 style="color: white; margin-bottom: 1rem;">Consulta tus citas</h3>
+      <h3 style="color: white; margin-bottom: 1rem;">Consulta tus citas y puntos</h3>
       <form method="POST" action="/mi-perfil" style="display: flex; gap: 1rem; flex-wrap: wrap;">
         <input type="email" name="email" placeholder="Ingresa tu correo electrónico" required value="{{ email }}" style="flex: 1; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
         <button type="submit" class="btn btn--primary">Buscar</button>
@@ -36,7 +50,8 @@
         <h2 class="section-title" style="text-align: left; font-size: 1.5rem; margin-bottom: 1rem;">Tus Citas</h2>
         <ul class="reservas-list">
           {% for reserva in reservas %}
-            <li class="reserva-item" style="border-left: 3px solid {% if reserva[6] == 'completada' %}#2d6a4f{% else %}var(--accent){% endif %};">
+            <!-- Usamos clases CSS según el estado para evitar errores en VS Code -->
+            <li class="reserva-item {% if reserva[6] == 'completada' %}estado-completado{% else %}estado-pendiente{% endif %}">
               <div class="reserva-info">
                 <span class="reserva-name" style="font-size: 1.1rem;">{{ reserva[3] }}</span>
                 <span class="reserva-idea">{{ reserva[2] }}</span>
@@ -45,7 +60,7 @@
                 </span>
               </div>
               <div class="reserva-meta">
-                <span class="reserva-id-badge" style="background: {% if reserva[6] == 'completada' %}#1b4332{% else %}#4a0e0e{% endif %}; color: white;">
+                <span class="reserva-id-badge {% if reserva[6] == 'completada' %}badge-completado{% else %}badge-pendiente{% endif %}">
                   {{ reserva[6] | upper }}
                 </span>
               </div>
