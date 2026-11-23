@@ -299,6 +299,50 @@ def exportar():
     return Response(output.getvalue(), mimetype="text/plain",
                     headers={"Content-Disposition": "attachment;filename=reservas_inkflow.txt"})
 
+@app.route('/mi-perfil', methods=['GET', 'POST'])
+def mi_perfil():
+    reservas_cliente = []
+    total_completados = 0
+    email_buscado = ""
+    
+    if request.method == 'POST':
+        email_buscado = request.form.get('email')
+        
+        conn = sqlite3.connect('inkflow.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM reservas WHERE email = ? ORDER BY fecha DESC", (email_buscado,))
+        reservas_cliente = cursor.fetchall()
+        
+        cursor.execute("SELECT COUNT(*) FROM reservas WHERE email = ? AND estado = 'completada'", (email_buscado,))
+        total_completados = cursor.fetchone()[0]
+        conn.close()
+        
+        if not reservas_cliente:
+            flash('No encontramos reservas con ese correo. ¡Anímate a agendar tu primera cita!', 'error')
+            
+    return render_template('perfil.html', 
+                           reservas=reservas_cliente, 
+                           total_completados=total_completados,
+                           email=email_buscado)
+
+@app.route('/dejar-resena', methods=['GET', 'POST'])
+def dejar_resena():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        comentario = request.form.get('comentario')
+        estrellas = request.form.get('estrellas')
+        
+        conn = sqlite3.connect('inkflow.db')
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO resenas (email, comentario, estrellas) VALUES (?, ?, ?)", 
+                       (email, comentario, estrellas))
+        conn.commit()
+        conn.close()
+        
+        flash('¡Gracias por tu reseña! Nos ayuda a seguir mejorando. ⭐', 'success')
+        return redirect(url_for('inicio'))
+        
+    return render_template('resena.html')
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
     return render_template('404.html'), 404
