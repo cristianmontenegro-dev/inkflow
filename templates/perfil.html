@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil — InkFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body style="padding-top: 5rem;">
+  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h1 class="section-title" style="text-align: left; margin-bottom: 0;">👤 Mi Perfil</h1>
+      <a href="/" class="btn btn--ghost" style="font-size: 0.9rem;">← Volver al Inicio</a>
+    </div>
+
+    <!-- FORMULARIO DE BÚSQUEDA -->
+    <div style="background: #111; padding: 2rem; border-radius: 12px; border: 1px solid #333; margin-bottom: 2rem;">
+      <h3 style="color: white; margin-bottom: 1rem;">Consulta tus citas</h3>
+      <form method="POST" action="/mi-perfil" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <input type="email" name="email" placeholder="Ingresa tu correo electrónico" required value="{{ email }}" style="flex: 1; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
+        <button type="submit" class="btn btn--primary">Buscar</button>
+      </form>
+    </div>
+
+    <!-- RESULTADOS Y SISTEMA DE LEALTAD -->
+    {% if email %}
+      <div style="background: #1b4332; border: 1px solid #2d6a4f; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
+        <h2 style="color: #95d5b2; margin-bottom: 0.5rem;">⭐ Programa de Lealtad ⭐</h2>
+        <p style="color: white; font-size: 1.2rem;">Llevas <strong>{{ total_completados }}</strong> tatuajes con nosotros.</p>
+        <p style="color: #95d5b2; font-size: 0.9rem; margin-top: 0.5rem;">¡Al llegar a 5, te ganas un flash exclusivo gratis!</p>
+      </div>
+
+      {% if reservas %}
+        <h2 class="section-title" style="text-align: left; font-size: 1.5rem; margin-bottom: 1rem;">Tus Citas</h2>
+        <ul class="reservas-list">
+          {% for reserva in reservas %}
+            <li class="reserva-item" style="border-left: 3px solid {% if reserva[6] == 'completada' %}#2d6a4f{% else %}var(--accent){% endif %};">
+              <div class="reserva-info">
+                <span class="reserva-name" style="font-size: 1.1rem;">{{ reserva[3] }}</span>
+                <span class="reserva-idea">{{ reserva[2] }}</span>
+                <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+                  📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }}
+                </span>
+              </div>
+              <div class="reserva-meta">
+                <span class="reserva-id-badge" style="background: {% if reserva[6] == 'completada' %}#1b4332{% else %}#4a0e0e{% endif %}; color: white;">
+                  {{ reserva[6] | upper }}
+                </span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="empty-reservas">No tienes citas registradas aún. ¡Agenda tu primera cita en el inicio!</p>
+      {% endif %}
+    {% endif %}
+
+  </div>
+</body>
+</html>
