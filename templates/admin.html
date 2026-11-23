@@ -7,47 +7,97 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body style="padding-top: 5rem;">
-  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+<body style="padding-top: 6rem;">
+  
+  <!-- CONTENEDOR DE MENSAJES FLASH -->
+  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <div style="max-width: 900px; margin: 0 auto; padding: 2rem 5%;">
     
     <!-- CABECERA -->
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h1 class="section-title" style="text-align: left; margin-bottom: 0;">🔒 Panel de Administrador</h1>
-      <a href="/logout" style="background: #333; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; border: 1px solid #555;">Salir 🚪</a>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2rem;">🔒 Panel de Administrador</h1>
+      <a href="/logout" class="btn btn--ghost" style="font-size: 0.9rem;">Salir 🚪</a>
     </div>
-    <p style="color: var(--text-muted); margin-bottom: 2rem; margin-top: 1rem;">Aquí gestionas las reservas de InkFlow.</p>
-        
-    
+
     <!-- TARJETAS DE ESTADÍSTICAS -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
-      <!-- Tarjeta de Pendientes -->
-      <div style="background: #111; border: 1px solid #333; border-left: 4px solid var(--accent); padding: 1.5rem; border-radius: 12px;">
-        <h4 style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Citas Pendientes</h4>
-        <p style="color: white; font-size: 2.5rem; font-weight: 800; margin: 0;">{{ total_pendientes }}</p>
+    <div class="dashboard-grid">
+      <div class="stat-card pendientes">
+        <h4 class="stat-title">Citas Pendientes</h4>
+        <p class="stat-value">{{ total_pendientes }}</p>
       </div>
       
-      <!-- Tarjeta de Completadas -->
-      <div style="background: #111; border: 1px solid #333; border-left: 4px solid #2d6a4f; padding: 1.5rem; border-radius: 12px;">
-        <h4 style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Tatuajes Completados</h4>
-        <p style="color: white; font-size: 2.5rem; font-weight: 800; margin: 0;">{{ total_completadas }}</p>
+      <div class="stat-card completados">
+        <h4 class="stat-title">Tatuajes Completados</h4>
+        <p class="stat-value">{{ total_completadas }}</p>
+      </div>
+
+      <div class="stat-card ingresos">
+        <h4 class="stat-title">Ingresos Totales</h4>
+        <p class="stat-value gold">${{ "{:,.0f}".format(ingresos_totales) }}</p>
       </div>
     </div>
 
+    <!-- GRÁFICO DE INGRESOS -->
+    {% if fechas_grafico %}
+    <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+      <h3 style="color: white; margin-bottom: 1.5rem; font-size: 1.2rem;">📈 Historial de Ingresos</h3>
+      <canvas id="graficoIngresos" 
+              data-fechas='{{ fechas_grafico | tojson }}' 
+              data-precios='{{ precios_grafico | tojson }}' 
+              style="max-height: 300px;"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const canvas = document.getElementById('graficoIngresos');
+      const fechas = JSON.parse(canvas.dataset.fechas);
+      const precios = JSON.parse(canvas.dataset.precios);
+
+      const ctx = canvas.getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: fechas,
+          datasets: [{
+            label: 'Ingresos (COP)',
+            data: precios,
+            backgroundColor: 'rgba(230, 57, 70, 0.6)',
+            borderColor: 'rgba(230, 57, 70, 1)',
+            borderWidth: 2,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9494a0' } },
+            x: { grid: { display: false }, ticks: { color: '#9494a0' } }
+          }
+        }
+      });
+    </script>
+    {% endif %}
+
     <!-- FILTRO POR FECHA -->
-    <div style="background: #111; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid #333; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-      <h3 style="color: white; margin: 0; flex: 1;">Filtrar citas por fecha 📅</h3>
-      
+    <div class="card" style="padding: 1.5rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <h3 style="color: white; margin: 0; flex: 1; font-size: 1.1rem;">Filtrar citas por fecha 📅</h3>
       <form method="GET" action="/admin" id="admin-filtro-form" style="display: flex; gap: 1rem; align-items: center;">
-        <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" style="padding: 0.8rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
-        <button type="submit" class="btn btn--primary" style="padding: 0.8rem 1.5rem;">Buscar</button>
-        
+        <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="form-input" style="padding: 0.6rem 1rem;">
+        <button type="submit" class="btn btn--primary" style="padding: 0.6rem 1.5rem;">Buscar</button>
         {% if fecha_filtro %}
-          <a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar filtro ❌</a>
+          <a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar ❌</a>
         {% endif %}
       </form>
-    </div>
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
-      <a href="/exportar" class="btn btn--ghost" style="font-size: 0.85rem; padding: 0.5rem 1rem;">📥 Exportar Reservas (.txt)</a>
     </div>
 
     {% if fecha_filtro %}
@@ -62,53 +112,46 @@
             <div class="reserva-info">
               <span class="reserva-name">{{ reserva[1] }}</span>
               <span class="reserva-idea">{{ reserva[2] }}</span>
-              <span style="color: var(--accent); font-size: 0.85rem; margin-top: 4px; font-weight: 600;">
-                📅 {{ reserva[3] }} a las 🕒 {{ reserva[4] }}
+              <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+                📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }} | 💰 ${{ "{:,.0f}".format(reserva[6]) }}
               </span>
             </div>
             <div class="reserva-meta">
-              <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
-              
-              <a href="/editar/{{ reserva[0] }}" class="btn-delete" style="background: #333; border: 1px solid #555; color: white; text-decoration: none;">✏️ Editar</a>
-              
-              <!-- BOTÓN DE COMPLETAR -->
-              <a href="/completar/{{ reserva[0] }}" class="btn-delete" style="background: #1b4332; border: 1px solid #2d6a4f; color: #95d5b2; text-decoration: none;">✅ Completar</a>
-              
-              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn-delete">🗑️ Borrar</a>
+              <span class="badge badge-pendiente">ID: {{ reserva[0] }}</span>
+              <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem;">✏️ Editar</a>
+              <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; background: #2d6a4f; box-shadow: none;">✅ Completar</a>
+              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem; color: var(--accent); border-color: var(--accent);">🗑️</a>
             </div>
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p class="empty-reservas">No hay reservas pendientes para esta fecha.</p>
+      <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay reservas pendientes para esta fecha.</p>
     {% endif %}
     
-    <!-- ENLACES DE NAVEGACIÓN -->
-    <div style="margin-top: 2rem; margin-bottom: 2rem; display: flex; gap: 1.5rem;">
-      <a href="/" style="color: var(--accent); text-decoration: none;">← Volver al inicio público</a>
-      <a href="/historial" style="color: #95d5b2; text-decoration: none;">📜 Ver historial de completadas</a>
+    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem;">
+      <a href="/" class="btn btn--ghost">← Volver al inicio</a>
+      <a href="/historial" class="btn btn--ghost" style="color: #95d5b2;">📜 Ver historial</a>
     </div>
 
-    <br><hr style="border-color: #333; margin: 2rem 0;"><br>
-
     <!-- FORMULARIO PARA SUBIR FLASH -->
-    <div style="background: #111; padding: 2rem; border-radius: 12px; margin-bottom: 3rem; border: 1px solid #333;">
-      <h3 style="color: white; margin-bottom: 1rem;">Subir nuevo Flash 🎨</h3>
-      <form action="/subir_flash" method="POST" enctype="multipart/form-data" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <input type="text" name="titulo" placeholder="Título (ej: Dragón)" required style="flex: 1; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
-        <input type="file" name="imagen" accept="image/*" required style="padding: 1rem; color: white;">
+    <div class="card" style="margin-bottom: 3rem;">
+      <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Subir nuevo Flash 🎨</h3>
+      <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="form-group" style="flex-direction: row; flex-wrap: wrap;">
+        <input type="text" name="titulo" class="form-input" placeholder="Título (ej: Dragón)" required style="flex: 1;">
+        <input type="file" name="imagen" accept="image/*" required class="form-input" style="flex: 1; padding: 0.8rem;">
         <button type="submit" class="btn btn--primary">Subir Imagen</button>
       </form>
     </div>
 
-    <!-- LISTA DE FLASHES (LIMPIOS) -->
-    <h3 style="color: white; margin-bottom: 1rem;">Tus flashes:</h3>
+    <!-- LISTA DE FLASHES -->
+    <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Tus flashes:</h3>
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
       {% for flash in lista_flashes %}
-        <div style="background: #222; padding: 1rem; border-radius: 8px; text-align: center;">
-          <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 4px; margin-bottom: 0.5rem;">
+        <div class="card" style="padding: 1rem; text-align: center;">
+          <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem;">
           <p style="color: white; font-size: 0.9rem;">{{ flash[1] }}</p>
-          <a href="/borrar_flash/{{ flash[0] }}" style="color: red; font-size: 0.8rem; text-decoration: none;">🗑️ Borrar</a>
+          <a href="/borrar_flash/{{ flash[0] }}" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; font-weight: 600;">🗑️ Borrar</a>
         </div>
       {% endfor %}
     </div>
