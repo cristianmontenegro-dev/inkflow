@@ -1,198 +1,161 @@
-{% extends "base.html" %}
-{% block title %}Panel — InkFlow{% endblock %}
-
-{% block head %}
-  <!-- Chart.js para el gráfico de ingresos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{% endblock %}
-
-{% block nav_links %}
-  <li class="ik-hide-sm"><a href="/">Inicio</a></li>
-  <li><a href="/historial">Historial</a></li>
-  <li><a href="/logout">Salir</a></li>
-{% endblock %}
-
-{% block content %}
-<div class="ik-wrap">
-
-  <!-- CABECERA -->
-  <div class="ik-panel-head">
-    <div>
-      <h1>🔒 Panel de administrador</h1>
-      <p>Gestiona tus citas, cobros y flashes.</p>
-    </div>
-    <div class="ik-actions">
-      <a href="/historial" class="ik-btn ik-btn--ghost ik-btn--sm">📜 Historial</a>
-      <a href="/exportar" class="ik-btn ik-btn--ghost ik-btn--sm">📥 Exportar (Excel/CSV)</a>
-    </div>
-  </div>
-
-  <!-- ESTADÍSTICAS -->
-  <div class="ik-stats">
-    <div class="ik-card ik-stat ik-stat--accent">
-      <div class="ik-stat__label">Citas pendientes</div>
-      <div class="ik-stat__value">{{ total_pendientes }}</div>
-    </div>
-    <div class="ik-card ik-stat ik-stat--green">
-      <div class="ik-stat__label">Tatuajes completados</div>
-      <div class="ik-stat__value">{{ total_completadas }}</div>
-    </div>
-    <div class="ik-card ik-stat ik-stat--gold">
-      <div class="ik-stat__label">Ingresos totales</div>
-      <div class="ik-stat__value">${{ "{:,.0f}".format(ingresos_totales) }}</div>
-    </div>
-  </div>
-
-  <!-- GRÁFICO DE INGRESOS -->
-  {% if fechas_grafico %}
-  <div class="ik-card ik-chart">
-    <h2>📈 Últimos ingresos</h2>
-    <div class="ik-chart__box">
-      <canvas id="graficoIngresos"
-              data-fechas='{{ fechas_grafico | tojson }}'
-              data-precios='{{ precios_grafico | tojson }}'></canvas>
-    </div>
-  </div>
-  {% endif %}
-
-  <!-- FILTRO POR FECHA -->
-  <div class="ik-toolbar">
-    <h2 class="ik-section-title" style="margin: 0;">Citas pendientes</h2>
-    <form method="GET" action="/admin">
-      <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="ik-input" aria-label="Filtrar por fecha">
-      <button type="submit" class="ik-btn ik-btn--primary ik-btn--sm">Buscar</button>
-      {% if fecha_filtro %}
-        <a href="/admin" class="ik-btn ik-btn--ghost ik-btn--sm">Limpiar</a>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — InkFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body style="padding-top: 6rem;">
+  
+  <!-- CONTENEDOR DE MENSAJES FLASH -->
+  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
       {% endif %}
-    </form>
-  </div>
-  {% if fecha_filtro %}
-    <p class="ik-note">Mostrando citas del día {{ fecha_filtro }}</p>
-  {% endif %}
-
-  <!-- LISTA DE RESERVAS -->
-  {% if lista_reservas %}
-    <ul class="ik-list">
-      {% for reserva in lista_reservas %}
-        <li class="ik-item">
-          <div class="ik-item__main">
-            <span class="ik-item__name">{{ reserva[1] }} <small>#{{ reserva[0] }}</small></span>
-            <span class="ik-item__idea">{{ reserva[3] }}</span>
-            <span class="ik-item__meta">📅 {{ reserva[4] }} · 🕒 {{ reserva[5] }}</span>
-            <span class="ik-item__meta">💰 Total ${{ "{:,.0f}".format(reserva[6] or 0) }} · 💵 Depósito ${{ "{:,.0f}".format(reserva[7] or 0) }}</span>
-          </div>
-
-          <div class="ik-item__actions">
-            <!-- ESTADO DEL DEPÓSITO -->
-            {% if reserva[8] == 1 %}
-              <span class="ik-badge ik-badge--ok">💸 Depósito pagado</span>
-            {% else %}
-              <form action="/pagar_deposito/{{ reserva[0] }}" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <button type="submit" class="ik-badge ik-badge--btn">💳 Cobrar depósito</button>
-              </form>
-            {% endif %}
-
-            <a href="/editar/{{ reserva[0] }}" class="ik-iconbtn" title="Editar" aria-label="Editar a {{ reserva[1] }}">✏️</a>
-
-            <!-- Completar: el tatuador confirma el precio final cobrado -->
-            <form action="/completar/{{ reserva[0] }}" method="POST"
-                  data-confirm="¿Marcar como completado el tatuaje de {{ reserva[1] }}?">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <input type="number" name="precio_final" value="{{ '%.0f'|format(reserva[6] or 0) }}" min="1000" step="1000"
-                     class="ik-input ik-input--sm" title="Precio final cobrado (COP)" aria-label="Precio final cobrado">
-              <button type="submit" class="ik-iconbtn ik-iconbtn--ok" title="Completar" aria-label="Marcar como completada">✅</button>
-            </form>
-
-            <form action="/borrar/{{ reserva[0] }}" method="POST" data-confirm="¿Borrar a {{ reserva[1] }}?">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <button type="submit" class="ik-iconbtn ik-iconbtn--danger" title="Borrar" aria-label="Borrar la reserva de {{ reserva[1] }}">🗑️</button>
-            </form>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="ik-empty-panel">No hay reservas pendientes{% if fecha_filtro %} para esta fecha{% endif %}.</p>
-  {% endif %}
-
-  <!-- SUBIR FLASH -->
-  <h2 class="ik-section-title">Subir nuevo flash 🎨</h2>
-  <div class="ik-card" style="padding: 1.5rem;">
-    <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="ik-upload">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <div class="ik-field">
-        <label for="titulo">Título</label>
-        <input type="text" id="titulo" name="titulo" class="ik-input" placeholder="Ej: Dragón tribal" required>
-      </div>
-      <div class="ik-field">
-        <label for="imagen">Imagen (PNG, JPG, WEBP o GIF · máx. 8 MB)</label>
-        <input type="file" id="imagen" name="imagen" accept="image/*" class="ik-input" required>
-      </div>
-      <button type="submit" class="ik-btn ik-btn--primary">Subir imagen</button>
-    </form>
+    {% endwith %}
   </div>
 
-  <!-- TUS FLASHES -->
-  <h2 class="ik-section-title">Tus flashes <small>{{ lista_flashes | length }} publicados</small></h2>
-  {% if lista_flashes %}
-    <div class="ik-admin-flashes">
-      {% for flash in lista_flashes %}
-        <div class="ik-mini">
-          <img src="{{ flash[2] }}" alt="Flash: {{ flash[1] }}" loading="lazy">
-          <p>{{ flash[1] }}</p>
-          <form action="/borrar_flash/{{ flash[0] }}" method="POST" data-confirm="¿Borrar el flash '{{ flash[1] }}'?">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit" class="ik-linkbtn">🗑️ Borrar</button>
-          </form>
-        </div>
-      {% endfor %}
+  <div style="max-width: 900px; margin: 0 auto; padding: 2rem 5%;">
+    
+    <!-- CABECERA -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2rem;">🔒 Panel de Administrador</h1>
+      <a href="/logout" class="btn btn--ghost" style="font-size: 0.9rem;">Salir 🚪</a>
     </div>
-  {% else %}
-    <p class="ik-empty-panel">Aún no has subido flashes. Los que subas aparecerán en tu galería pública.</p>
-  {% endif %}
 
-</div>
-{% endblock %}
+    <!-- TARJETAS DE ESTADÍSTICAS -->
+    <div class="dashboard-grid">
+      <div class="stat-card pendientes">
+        <h4 class="stat-title">Citas Pendientes</h4>
+        <p class="stat-value">{{ total_pendientes }}</p>
+      </div>
+      
+      <div class="stat-card completados">
+        <h4 class="stat-title">Tatuajes Completados</h4>
+        <p class="stat-value">{{ total_completadas }}</p>
+      </div>
 
-{% block scripts %}
-  {% if fechas_grafico %}
-  <script>
-    // El gráfico solo se dibuja si Chart.js cargó correctamente
-    (function () {
-      if (typeof Chart === 'undefined') return;
-      var canvas = document.getElementById('graficoIngresos');
-      var fechas = JSON.parse(canvas.dataset.fechas);
-      var precios = JSON.parse(canvas.dataset.precios);
-      var muted = '#a0a0ad';
-      new Chart(canvas.getContext('2d'), {
+      <div class="stat-card ingresos">
+        <h4 class="stat-title">Ingresos Totales</h4>
+        <p class="stat-value gold">${{ "{:,.0f}".format(ingresos_totales) }}</p>
+      </div>
+    </div>
+
+    <!-- GRÁFICO DE INGRESOS -->
+    {% if fechas_grafico %}
+    <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
+      <h3 style="color: white; margin-bottom: 1.5rem; font-size: 1.2rem;">📈 Historial de Ingresos</h3>
+      <canvas id="graficoIngresos" 
+              data-fechas='{{ fechas_grafico | tojson }}' 
+              data-precios='{{ precios_grafico | tojson }}' 
+              style="max-height: 300px;"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const canvas = document.getElementById('graficoIngresos');
+      const fechas = JSON.parse(canvas.dataset.fechas);
+      const precios = JSON.parse(canvas.dataset.precios);
+
+      const ctx = canvas.getContext('2d');
+      new Chart(ctx, {
         type: 'bar',
         data: {
           labels: fechas,
           datasets: [{
             label: 'Ingresos (COP)',
             data: precios,
-            backgroundColor: 'rgba(230, 57, 70, 0.65)',
-            borderColor: '#e63946',
-            borderWidth: 1.5,
-            borderRadius: 8,
-            maxBarThickness: 56
+            backgroundColor: 'rgba(230, 57, 70, 0.6)',
+            borderColor: 'rgba(230, 57, 70, 1)',
+            borderWidth: 2,
+            borderRadius: 6
           }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: function (c) { return ' $' + Number(c.parsed.y).toLocaleString('es-CO'); } } }
-          },
+          plugins: { legend: { display: false } },
           scales: {
-            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: muted, callback: function (v) { return '$' + Number(v).toLocaleString('es-CO'); } } },
-            x: { grid: { display: false }, ticks: { color: muted } }
+            y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9494a0' } },
+            x: { grid: { display: false }, ticks: { color: '#9494a0' } }
           }
         }
       });
-    })();
-  </script>
-  {% endif %}
-{% endblock %}
+    </script>
+    {% endif %}
+
+    <!-- FILTRO POR FECHA -->
+    <div class="card" style="padding: 1.5rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <h3 style="color: white; margin: 0; flex: 1; font-size: 1.1rem;">Filtrar citas por fecha 📅</h3>
+      <form method="GET" action="/admin" id="admin-filtro-form" style="display: flex; gap: 1rem; align-items: center;">
+        <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="form-input" style="padding: 0.6rem 1rem;">
+        <button type="submit" class="btn btn--primary" style="padding: 0.6rem 1.5rem;">Buscar</button>
+        {% if fecha_filtro %}
+          <a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar ❌</a>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if fecha_filtro %}
+      <p style="color: var(--accent); margin-bottom: 1rem; font-weight: 600;">Mostrando citas del día: {{ fecha_filtro }}</p>
+    {% endif %}
+
+    <!-- LISTA DE RESERVAS -->
+    {% if lista_reservas %}
+      <ul class="reservas-list">
+        {% for reserva in lista_reservas %}
+          <li class="reserva-item">
+            <div class="reserva-info">
+              <span class="reserva-name">{{ reserva[1] }}</span>
+              <span class="reserva-idea">{{ reserva[2] }}</span>
+              <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+                📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }} | 💰 ${{ "{:,.0f}".format(reserva[6]) }}
+              </span>
+            </div>
+            <div class="reserva-meta">
+              <span class="badge badge-pendiente">ID: {{ reserva[0] }}</span>
+              <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem;">✏️ Editar</a>
+              <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; background: #2d6a4f; box-shadow: none;">✅ Completar</a>
+              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem; color: var(--accent); border-color: var(--accent);">🗑️</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay reservas pendientes para esta fecha.</p>
+    {% endif %}
+    
+    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem;">
+      <a href="/" class="btn btn--ghost">← Volver al inicio</a>
+      <a href="/historial" class="btn btn--ghost" style="color: #95d5b2;">📜 Ver historial</a>
+    </div>
+
+    <!-- FORMULARIO PARA SUBIR FLASH -->
+    <div class="card" style="margin-bottom: 3rem;">
+      <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Subir nuevo Flash 🎨</h3>
+      <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="form-group" style="flex-direction: row; flex-wrap: wrap;">
+        <input type="text" name="titulo" class="form-input" placeholder="Título (ej: Dragón)" required style="flex: 1;">
+        <input type="file" name="imagen" accept="image/*" required class="form-input" style="flex: 1; padding: 0.8rem;">
+        <button type="submit" class="btn btn--primary">Subir Imagen</button>
+      </form>
+    </div>
+
+    <!-- LISTA DE FLASHES -->
+    <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Tus flashes:</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+      {% for flash in lista_flashes %}
+        <div class="card" style="padding: 1rem; text-align: center;">
+          <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem;">
+          <p style="color: white; font-size: 0.9rem;">{{ flash[1] }}</p>
+          <a href="/borrar_flash/{{ flash[0] }}" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; font-weight: 600;">🗑️ Borrar</a>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</body>
+</html>

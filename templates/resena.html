@@ -1,36 +1,48 @@
-{% extends "base.html" %}
-{% block title %}Deja tu reseña — InkFlow{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deja tu Reseña — InkFlow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body style="padding-top: 5rem; display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+  
+  <!-- CONTENEDOR DE MENSAJES FLASH -->
+  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
 
-{% block content %}
-<div class="ik-narrow" style="padding-top: 2rem;">
-  <form method="POST" action="/dejar-resena" class="ik-form ik-auth">
-    <div class="ik-auth__icon" aria-hidden="true">⭐</div>
-    <h1>Deja tu reseña</h1>
-    <p>Tu opinión ayuda a otras personas a decidirse y a mí a seguir creciendo.</p>
+  <div style="background: var(--bg-card); padding: 3rem; border-radius: 24px; border: 1px solid var(--border-subtle); width: 100%; max-width: 500px; backdrop-filter: blur(16px);">
+    <h2 style="text-align: center; margin-bottom: 1rem; color: white;">⭐ Califica tu experiencia</h2>
+    <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem; font-size: 0.9rem;">Tu opinión ayuda a otros a decidirse.</p>
 
-    <div class="ik-field">
-      <label>¿Cómo calificas tu experiencia?</label>
-      <!-- Las estrellas van de 5 a 1 en el HTML; CSS las muestra de 1 a 5 -->
-      <div class="ik-rate" role="radiogroup" aria-label="Calificación de 1 a 5 estrellas">
-        <input type="radio" id="e5" name="estrellas" value="5" required><label for="e5" title="5 estrellas">★</label>
-        <input type="radio" id="e4" name="estrellas" value="4"><label for="e4" title="4 estrellas">★</label>
-        <input type="radio" id="e3" name="estrellas" value="3"><label for="e3" title="3 estrellas">★</label>
-        <input type="radio" id="e2" name="estrellas" value="2"><label for="e2" title="2 estrellas">★</label>
-        <input type="radio" id="e1" name="estrellas" value="1"><label for="e1" title="1 estrella">★</label>
-      </div>
+    <form method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <input type="email" name="email" placeholder="Tu correo electrónico" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+      
+      <select name="estrellas" required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white;">
+        <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+        <option value="4">⭐⭐⭐⭐ (Muy bueno)</option>
+        <option value="3">⭐⭐⭐ (Bueno)</option>
+        <option value="2">⭐⭐ (Regular)</option>
+        <option value="1">⭐ (Malo)</option>
+      </select>
+
+      <textarea name="comentario" placeholder="Cuéntanos cómo fue tu experiencia..." required style="padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #111; color: white; resize: vertical; min-height: 100px;"></textarea>
+      
+      <button type="submit" class="btn btn--primary" style="margin-top: 1rem;">Enviar Reseña</button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="/" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">← Volver al inicio</a>
     </div>
-
-    <div class="ik-field">
-      <label for="email">Correo con el que reservaste</label>
-      <input type="email" id="email" name="email" class="ik-input" placeholder="tucorreo@ejemplo.com" autocomplete="email" required>
-    </div>
-
-    <div class="ik-field">
-      <label for="comentario">Tu comentario</label>
-      <textarea id="comentario" name="comentario" class="ik-input" placeholder="Cuéntanos cómo fue tu experiencia" maxlength="500" required></textarea>
-    </div>
-
-    <button type="submit" class="ik-btn ik-btn--primary ik-btn--block">Publicar reseña</button>
-  </form>
-</div>
-{% endblock %}
+  </div>
+</body>
+</html>
