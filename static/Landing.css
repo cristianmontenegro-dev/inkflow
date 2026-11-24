@@ -1,0 +1,142 @@
+/* ==========================================================
+   InkFlow — Componentes del panel y páginas internas
+   Se carga DESPUÉS de landing.css (usa sus variables --ik-*).
+   Lo usan: admin, login, perfil, reseña, editar, historial y 404.
+   ========================================================== */
+
+.ik-page { padding: 6.5rem 0 4rem; min-height: 100vh; }
+.ik-wrap { width: min(1000px, calc(100% - 2.5rem)); margin-inline: auto; }
+.ik-narrow { width: min(460px, calc(100% - 2rem)); margin-inline: auto; }
+.ik-medium { width: min(720px, calc(100% - 2rem)); margin-inline: auto; }
+
+.ik-panel-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.ik-panel-head h1 { font-family: var(--ik-font-head); font-weight: 800; letter-spacing: -0.02em; font-size: clamp(1.7rem, 3.6vw, 2.3rem); line-height: 1.15; }
+.ik-panel-head p { color: var(--ik-muted); font-size: 0.95rem; margin-top: 0.2rem; }
+.ik-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.ik-section-title { font-size: 1.15rem; font-weight: 700; margin: 2.4rem 0 1rem; display: flex; align-items: center; gap: 0.6rem; }
+.ik-section-title small { color: var(--ik-muted); font-weight: 500; font-size: 0.85rem; }
+.ik-back { display: inline-block; color: var(--ik-muted); text-decoration: none; font-size: 0.92rem; margin-bottom: 1.2rem; }
+.ik-back:hover { color: var(--ik-text); }
+
+/* ---------- Tarjeta de acceso / formularios centrados ---------- */
+.ik-auth { text-align: center; }
+.ik-auth__icon {
+  width: 3.6rem; height: 3.6rem; margin: 0 auto 0.4rem; border-radius: 18px; display: grid; place-items: center;
+  background: var(--ik-accent-soft); border: 1px solid rgba(230, 57, 70, 0.3); font-size: 1.7rem;
+}
+.ik-auth h1 { font-family: var(--ik-font-head); font-size: 1.7rem; letter-spacing: -0.02em; }
+.ik-auth > p { color: var(--ik-muted); font-size: 0.95rem; margin-top: -0.4rem; }
+.ik-auth .ik-field { text-align: left; }
+
+/* ---------- Estadísticas ---------- */
+.ik-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.ik-stat { padding: 1.4rem 1.5rem; }
+.ik-stat:hover { transform: none; }
+.ik-stat__label { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ik-muted); }
+.ik-stat__value { font-family: var(--ik-font-head); font-weight: 800; font-size: 2.3rem; line-height: 1.2; margin-top: 0.3rem; letter-spacing: -0.02em; }
+.ik-stat--gold .ik-stat__value { color: var(--ik-gold); }
+.ik-stat--green .ik-stat__value { color: #5fd49a; }
+.ik-stat--accent .ik-stat__value { color: var(--ik-accent-2); }
+
+/* ---------- Gráfico ---------- */
+.ik-chart { padding: 1.6rem; margin-bottom: 1.5rem; }
+.ik-chart:hover { transform: none; }
+.ik-chart h2 { font-size: 1.05rem; margin-bottom: 1.2rem; }
+.ik-chart__box { position: relative; height: 260px; }
+
+/* ---------- Barra de filtro ---------- */
+.ik-toolbar { display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.2rem; }
+.ik-toolbar h2 { font-size: 1.05rem; flex: 1; min-width: 180px; }
+.ik-toolbar form { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.ik-toolbar .ik-input { width: auto; padding: 0.6rem 0.9rem; }
+.ik-note { color: var(--ik-accent-2); font-weight: 600; font-size: 0.92rem; margin-bottom: 1rem; }
+
+/* ---------- Listas de reservas ---------- */
+.ik-list { list-style: none; display: grid; gap: 0.8rem; }
+.ik-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: linear-gradient(180deg, var(--ik-surface-2), var(--ik-surface));
+  border: 1px solid var(--ik-line); border-radius: 16px; padding: 1.1rem 1.3rem;
+  transition: border-color 0.2s ease;
+}
+.ik-item:hover { border-color: var(--ik-line-strong); }
+.ik-item__main { display: grid; gap: 0.15rem; min-width: 220px; flex: 1; }
+.ik-item__name { font-weight: 700; font-size: 1.02rem; }
+.ik-item__name small { color: var(--ik-muted); font-weight: 500; margin-left: 0.4rem; }
+.ik-item__idea { color: var(--ik-text); opacity: 0.85; font-size: 0.95rem; }
+.ik-item__meta { color: var(--ik-muted); font-size: 0.85rem; margin-top: 0.25rem; }
+.ik-item__actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.ik-item__actions form { display: inline-flex; gap: 0.4rem; align-items: center; }
+.ik-empty-panel { text-align: center; color: var(--ik-muted); padding: 3rem 1rem; border: 1px dashed var(--ik-line-strong); border-radius: var(--ik-radius); }
+
+/* ---------- Insignias y botones pequeños ---------- */
+.ik-badge {
+  display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.28rem 0.75rem; border-radius: 999px;
+  font: 600 0.76rem var(--ik-font); border: 1px solid var(--ik-line-strong); color: var(--ik-muted); background: transparent;
+}
+.ik-badge--ok { background: rgba(46, 194, 126, 0.12); border-color: rgba(46, 194, 126, 0.4); color: #7fe0b2; }
+.ik-badge--warn { background: rgba(255, 209, 102, 0.12); border-color: rgba(255, 209, 102, 0.4); color: var(--ik-gold); }
+.ik-badge--btn { cursor: pointer; background: var(--ik-gold); border-color: transparent; color: #1a1500; transition: transform 0.15s ease; }
+.ik-badge--btn:hover { transform: translateY(-1px); }
+
+.ik-iconbtn {
+  width: 2.4rem; height: 2.4rem; display: inline-grid; place-items: center; border-radius: 12px; cursor: pointer;
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--ik-line-strong); color: var(--ik-text); text-decoration: none; font-size: 1rem;
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+.ik-iconbtn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-1px); }
+.ik-iconbtn--ok { background: rgba(46, 194, 126, 0.14); border-color: rgba(46, 194, 126, 0.45); }
+.ik-iconbtn--danger { border-color: rgba(230, 57, 70, 0.5); color: var(--ik-accent-2); }
+.ik-iconbtn--danger:hover { background: var(--ik-accent-soft); }
+.ik-input--sm { width: 7.2rem; padding: 0.5rem 0.7rem; font-size: 0.85rem; }
+.ik-linkbtn { background: none; border: none; cursor: pointer; color: var(--ik-accent-2); font: 600 0.82rem var(--ik-font); }
+.ik-linkbtn:hover { text-decoration: underline; }
+
+/* ---------- Galería del admin ---------- */
+.ik-admin-flashes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+.ik-mini { border: 1px solid var(--ik-line); border-radius: 16px; overflow: hidden; background: var(--ik-surface); text-align: center; }
+.ik-mini img { width: 100%; height: 110px; object-fit: cover; }
+.ik-mini p { font-size: 0.88rem; font-weight: 600; padding: 0.6rem 0.6rem 0.2rem; }
+.ik-mini form { padding-bottom: 0.7rem; }
+.ik-upload { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: flex-end; }
+.ik-upload .ik-field { flex: 1; min-width: 200px; }
+.ik-upload input[type='file'] { padding: 0.65rem 0.9rem; }
+
+/* ---------- Tabla (historial) ---------- */
+.ik-table-wrap { overflow-x: auto; border: 1px solid var(--ik-line); border-radius: var(--ik-radius); background: var(--ik-surface); }
+.ik-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+.ik-table th { text-align: left; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ik-muted); padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--ik-line-strong); }
+.ik-table td { padding: 0.95rem 1.1rem; border-bottom: 1px solid var(--ik-line); font-size: 0.93rem; }
+.ik-table tr:last-child td { border-bottom: none; }
+.ik-table tbody tr:hover td { background: rgba(255, 255, 255, 0.025); }
+.ik-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.ik-table td small { display: block; color: var(--ik-muted); }
+
+/* ---------- Perfil de cliente ---------- */
+.ik-loyalty { text-align: center; padding: 2rem 1.5rem; margin: 1.5rem 0; position: relative; overflow: hidden; }
+.ik-loyalty:hover { transform: none; }
+.ik-loyalty::before { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 80% at 50% 0%, rgba(255, 209, 102, 0.14), transparent 70%); }
+.ik-loyalty > * { position: relative; }
+.ik-loyalty__num { font-family: var(--ik-font-head); font-weight: 800; font-size: 4rem; line-height: 1; color: var(--ik-gold); }
+.ik-loyalty__label { font-weight: 700; margin-top: 0.4rem; }
+.ik-loyalty p { color: var(--ik-muted); font-size: 0.88rem; margin-top: 0.2rem; }
+
+/* ---------- Estrellas de reseña (solo CSS) ---------- */
+.ik-rate { display: flex; flex-direction: row-reverse; justify-content: center; gap: 0.3rem; position: relative; }
+.ik-rate input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.ik-rate label { font-size: 2.5rem; line-height: 1; color: #3a3a46; cursor: pointer; transition: color 0.15s ease, transform 0.15s ease; }
+.ik-rate label:hover, .ik-rate label:hover ~ label, .ik-rate input:checked ~ label { color: var(--ik-gold); }
+.ik-rate label:hover { transform: scale(1.15); }
+.ik-rate input:focus-visible + label { outline: 2px solid var(--ik-accent-2); border-radius: 6px; }
+textarea.ik-input { min-height: 120px; resize: vertical; line-height: 1.5; }
+
+/* ---------- 404 ---------- */
+.ik-404 { text-align: center; padding: 3rem 1rem; }
+.ik-404__num { font-family: var(--ik-font-head); font-weight: 800; font-size: clamp(6rem, 22vw, 11rem); line-height: 1; letter-spacing: -0.04em; }
+.ik-404 p { color: var(--ik-muted); margin: 0.5rem 0 2rem; font-size: 1.1rem; }
+
+@media (max-width: 720px) {
+  .ik-item { padding: 1rem; }
+  .ik-item__actions { width: 100%; }
+  .ik-chart__box { height: 220px; }
+}
