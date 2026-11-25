@@ -6,10 +6,10 @@
   <title>Admin — InkFlow</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body style="padding-top: 6rem;">
   
-  <!-- CONTENEDOR DE MENSAJES FLASH -->
   <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -20,11 +20,11 @@
     {% endwith %}
   </div>
 
-  <div style="max-width: 900px; margin: 0 auto; padding: 2rem 5%;">
+  <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 5%;">
     
     <!-- CABECERA -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-      <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2rem;">🔒 Panel de Administrador</h1>
+      <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2.2rem;">🔒 Panel de Administrador</h1>
       <a href="/logout" class="btn btn--ghost" style="font-size: 0.9rem;">Salir 🚪</a>
     </div>
 
@@ -34,12 +34,10 @@
         <h4 class="stat-title">Citas Pendientes</h4>
         <p class="stat-value">{{ total_pendientes }}</p>
       </div>
-      
       <div class="stat-card completados">
         <h4 class="stat-title">Tatuajes Completados</h4>
         <p class="stat-value">{{ total_completadas }}</p>
       </div>
-
       <div class="stat-card ingresos">
         <h4 class="stat-title">Ingresos Totales</h4>
         <p class="stat-value gold">${{ "{:,.0f}".format(ingresos_totales) }}</p>
@@ -50,40 +48,20 @@
     {% if fechas_grafico %}
     <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
       <h3 style="color: white; margin-bottom: 1.5rem; font-size: 1.2rem;">📈 Historial de Ingresos</h3>
-      <canvas id="graficoIngresos" 
-              data-fechas='{{ fechas_grafico | tojson }}' 
-              data-precios='{{ precios_grafico | tojson }}' 
-              style="max-height: 300px;"></canvas>
+      <canvas id="graficoIngresos" data-fechas='{{ fechas_grafico | tojson }}' data-precios='{{ precios_grafico | tojson }}' style="max-height: 300px;"></canvas>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const canvas = document.getElementById('graficoIngresos');
       const fechas = JSON.parse(canvas.dataset.fechas);
       const precios = JSON.parse(canvas.dataset.precios);
-
       const ctx = canvas.getContext('2d');
       new Chart(ctx, {
         type: 'bar',
         data: {
           labels: fechas,
-          datasets: [{
-            label: 'Ingresos (COP)',
-            data: precios,
-            backgroundColor: 'rgba(230, 57, 70, 0.6)',
-            borderColor: 'rgba(230, 57, 70, 1)',
-            borderWidth: 2,
-            borderRadius: 6
-          }]
+          datasets: [{ label: 'Ingresos', data: precios, backgroundColor: 'rgba(230, 57, 70, 0.6)', borderColor: '#e63946', borderWidth: 2, borderRadius: 6 }]
         },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9494a0' } },
-            x: { grid: { display: false }, ticks: { color: '#9494a0' } }
-          }
-        }
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: '#9494a0' } }, x: { ticks: { color: '#9494a0' } } } }
       });
     </script>
     {% endif %}
@@ -91,18 +69,12 @@
     <!-- FILTRO POR FECHA -->
     <div class="card" style="padding: 1.5rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
       <h3 style="color: white; margin: 0; flex: 1; font-size: 1.1rem;">Filtrar citas por fecha 📅</h3>
-      <form method="GET" action="/admin" id="admin-filtro-form" style="display: flex; gap: 1rem; align-items: center;">
+      <form method="GET" action="/admin" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
         <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="form-input" style="padding: 0.6rem 1rem;">
         <button type="submit" class="btn btn--primary" style="padding: 0.6rem 1.5rem;">Buscar</button>
-        {% if fecha_filtro %}
-          <a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar ❌</a>
-        {% endif %}
+        {% if fecha_filtro %}<a href="/admin" style="color: var(--text-muted); text-decoration: none;">Limpiar ❌</a>{% endif %}
       </form>
     </div>
-
-    {% if fecha_filtro %}
-      <p style="color: var(--accent); margin-bottom: 1rem; font-weight: 600;">Mostrando citas del día: {{ fecha_filtro }}</p>
-    {% endif %}
 
     <!-- LISTA DE RESERVAS -->
     {% if lista_reservas %}
@@ -111,36 +83,47 @@
           <li class="reserva-item">
             <div class="reserva-info">
               <span class="reserva-name">{{ reserva[1] }}</span>
-              <span class="reserva-idea">{{ reserva[2] }}</span>
+              <span class="reserva-idea">{{ reserva[3] }}</span>
               <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
-                📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }} | 💰 ${{ "{:,.0f}".format(reserva[6]) }}
+                📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }} <br>
+                <!-- El "or 0" evita el error si hay datos viejos sin precio -->
+                💰 Total: ${{ "{:,.0f}".format(reserva[6] or 0) }} | 💵 Depósito: ${{ "{:,.0f}".format(reserva[7] or 0) }}
               </span>
             </div>
             <div class="reserva-meta">
               <span class="badge badge-pendiente">ID: {{ reserva[0] }}</span>
-              <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem;">✏️ Editar</a>
-              <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 1rem; font-size: 0.85rem; background: #2d6a4f; box-shadow: none;">✅ Completar</a>
-              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem; color: var(--accent); border-color: var(--accent);">🗑️</a>
+              
+              {% if reserva[8] == 1 %}
+                <span class="badge" style="background: rgba(45, 106, 79, 0.2); color: #95d5b2; border: 1px solid #2d6a4f;">💸 Pagado</span>
+              {% else %}
+                <a href="/pagar_deposito/{{ reserva[0] }}" class="badge" style="background: #ffd700; color: black; text-decoration: none; font-weight: bold; border: none;">💳 Cobrar</a>
+              {% endif %}
+              
+              <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem;">✏️</a>
+              <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 1rem; background: #2d6a4f; box-shadow: none;">✅</a>
+              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 1rem; color: var(--accent); border-color: var(--accent);">🗑️</a>
             </div>
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay reservas pendientes para esta fecha.</p>
+      <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay reservas pendientes.</p>
     {% endif %}
     
-    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem;">
+    <!-- NAVEGACIÓN -->
+    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
       <a href="/" class="btn btn--ghost">← Volver al inicio</a>
-      <a href="/historial" class="btn btn--ghost" style="color: #95d5b2;">📜 Ver historial</a>
+      <a href="/historial" class="btn btn--ghost" style="color: #95d5b2; border-color: #2d6a4f;">📜 Ver historial</a>
+      <a href="/exportar" class="btn btn--ghost" style="color: var(--gold); border-color: rgba(255, 215, 0, 0.3);">📥 Exportar (.txt)</a>
     </div>
 
-    <!-- FORMULARIO PARA SUBIR FLASH -->
-    <div class="card" style="margin-bottom: 3rem;">
+    <!-- SUBIR FLASH -->
+    <div class="card" style="margin-bottom: 3rem; padding: 2rem;">
       <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Subir nuevo Flash 🎨</h3>
-      <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="form-group" style="flex-direction: row; flex-wrap: wrap;">
-        <input type="text" name="titulo" class="form-input" placeholder="Título (ej: Dragón)" required style="flex: 1;">
-        <input type="file" name="imagen" accept="image/*" required class="form-input" style="flex: 1; padding: 0.8rem;">
-        <button type="submit" class="btn btn--primary">Subir Imagen</button>
+      <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="form-group" style="flex-direction: row; flex-wrap: wrap; align-items: center;">
+        <input type="text" name="titulo" class="form-input" placeholder="Título" required style="flex: 1; min-width: 200px;">
+        <input type="file" name="imagen" accept="image/*" required class="form-input" style="flex: 1; min-width: 200px; padding: 0.8rem;">
+        <button type="submit" class="btn btn--primary">Subir</button>
       </form>
     </div>
 

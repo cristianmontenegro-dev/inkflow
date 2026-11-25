@@ -7,10 +7,9 @@ import cloudinary.uploader
 from datetime import datetime
 
 app = Flask(__name__)
-# Clave secreta para proteger las sesiones de los usuarios
 app.secret_key = os.environ.get('SECRET_KEY', 'inkflow_super_secreto_2026')
 
-# --- CONFIGURACIÓN DE CLOUDINARY (Subida de imágenes a la nube) ---
+# --- CONFIGURACIÓN DE CLOUDINARY ---
 cloudinary.config( 
   cloud_name = os.environ.get('CLOUDINARY_CLOUD_NAME', 'tgzwbtsk'), 
   api_key = os.environ.get('CLOUDINARY_API_KEY', '126599169651419'), 
@@ -18,14 +17,12 @@ cloudinary.config(
   secure = True
 )
 
-# ==========================================
-# 1. INICIALIZACIÓN DE LA BASE DE DATOS
-# ==========================================
+# --- 1. INICIALIZACIÓN DE LA BASE DE DATOS ---
 def init_db():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     
-    # Tabla de Reservas (¡Única y con todas las columnas nuevas!)
+    # Tabla de Reservas
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS reservas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +38,7 @@ def init_db():
         )
     ''')
     
-    # Tabla de Galería (Flashes)
+    # Tabla de Flashes (Galería)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS flashes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,12 +60,10 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Ejecutamos la función para asegurar que las tablas existan al arrancar
 init_db()
 
-
 # ==========================================
-# 2. RUTAS PÚBLICAS (Para los clientes)
+# 2. RUTAS PÚBLICAS (CLIENTES)
 # ==========================================
 
 @app.route('/')
@@ -76,11 +71,10 @@ def inicio():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     
-    # Traemos los diseños para la galería
+    # Traemos los flashes y las 3 reseñas más recientes
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     
-    # Traemos las 3 reseñas más recientes para mostrar en la página
     cursor.execute("SELECT * FROM resenas ORDER BY id DESC LIMIT 3") 
     resenas = cursor.fetchall()
     
@@ -89,7 +83,7 @@ def inicio():
 
 @app.route('/reservar', methods=['POST'])
 def reservar():
-    # Capturamos los datos del formulario
+    # Datos del formulario
     nombre = request.form.get('nombre')
     email = request.form.get('email')
     idea = request.form.get('idea')
@@ -98,13 +92,12 @@ def reservar():
     precio = request.form.get('precio')
     deposito = request.form.get('deposito')
     
-    # Validación: No permitir fechas en el pasado
+    # Validación de fecha
     hoy = datetime.now().strftime('%Y-%m-%d')
     if fecha < hoy:
         flash('❌ Error: No puedes reservar en el pasado.', 'error')
         return redirect(url_for('inicio'))
         
-    # Guardamos la reserva en la base de datos
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     cursor.execute("""
@@ -114,7 +107,7 @@ def reservar():
     conn.commit()
     conn.close()
     
-    flash('¡Tu cita ha sido agendada! Recuerda abonar el depósito. 🖤', 'success')
+    flash('¡Tu cita ha sido agendada! No olvides abonar el depósito. 🖤', 'success')
     return redirect(url_for('inicio'))
 
 @app.route('/mi-perfil', methods=['GET', 'POST'])
@@ -123,29 +116,22 @@ def mi_perfil():
     total_completados = 0
     email_buscado = ""
     
-    # Si el cliente envía su correo para buscar
     if request.method == 'POST':
         email_buscado = request.form.get('email')
         
         conn = sqlite3.connect('inkflow.db')
         cursor = conn.cursor()
-        
-        # Buscamos todas sus reservas
         cursor.execute("SELECT * FROM reservas WHERE email = ? ORDER BY fecha DESC", (email_buscado,))
         reservas_cliente = cursor.fetchall()
         
-        # Contamos cuántos tatuajes se ha hecho (para los puntos de lealtad)
         cursor.execute("SELECT COUNT(*) FROM reservas WHERE email = ? AND estado = 'completada'", (email_buscado,))
         total_completados = cursor.fetchone()[0]
         conn.close()
         
         if not reservas_cliente:
-            flash('No encontramos reservas con ese correo. ¡Anímate a agendar!', 'error')
+            flash('No encontramos reservas con ese correo. ¡Anímate a agendar tu primera cita!', 'error')
             
-    return render_template('perfil.html', 
-                           reservas=reservas_cliente, 
-                           total_completados=total_completados,
-                           email=email_buscado)
+    return render_template('perfil.html', reservas=reservas_cliente, total_completados=total_completados, email=email_buscado)
 
 @app.route('/dejar-resena', methods=['GET', 'POST'])
 def dejar_resena():
@@ -156,19 +142,17 @@ def dejar_resena():
         
         conn = sqlite3.connect('inkflow.db')
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO resenas (email, comentario, estrellas) VALUES (?, ?, ?)", 
-                       (email, comentario, estrellas))
+        cursor.execute("INSERT INTO resenas (email, comentario, estrellas) VALUES (?, ?, ?)", (email, comentario, estrellas))
         conn.commit()
         conn.close()
         
-        flash('¡Gracias por tu reseña! Nos ayuda a seguir creciendo. ⭐', 'success')
+        flash('¡Gracias por tu reseña! Nos ayuda a seguir mejorando. ⭐', 'success')
         return redirect(url_for('inicio'))
         
     return render_template('resena.html')
 
-
 # ==========================================
-# 3. RUTAS PRIVADAS (Panel del Administrador)
+# 3. RUTAS PRIVADAS (ADMINISTRADOR)
 # ==========================================
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -176,8 +160,6 @@ def login():
     if request.method == 'POST':
         usuario = request.form.get('usuario')
         contrasena = request.form.get('contrasena')
-        
-        # Credenciales (se leen de variables de entorno o usan los valores por defecto)
         usuario_correcto = os.environ.get('ADMIN_USER', 'cristian')
         contrasena_correcta = os.environ.get('ADMIN_PASS', 'tatuaje2026')
         
@@ -198,7 +180,6 @@ def logout():
 
 @app.route('/admin')
 def admin():
-    # Protegemos la ruta: Si no está logueado, lo mandamos al login
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     
@@ -206,14 +187,12 @@ def admin():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     
-    # 1. Traemos las reservas (filtradas o todas las pendientes)
     if fecha_filtro:
         cursor.execute("SELECT * FROM reservas WHERE fecha = ? AND estado = 'pendiente'", (fecha_filtro,))
     else:
         cursor.execute("SELECT * FROM reservas WHERE estado = 'pendiente'")
     reservas = cursor.fetchall()
 
-    # 2. Calculamos las estadísticas del Dashboard
     cursor.execute("SELECT COUNT(*) FROM reservas WHERE estado = 'pendiente'")
     total_pendientes = cursor.fetchone()[0]
     
@@ -221,31 +200,22 @@ def admin():
     total_completadas = cursor.fetchone()[0]
     
     cursor.execute("SELECT SUM(precio) FROM reservas WHERE estado = 'completada'")
-    ingresos_totales = cursor.fetchone()[0] or 0 # Si no hay ingresos, que sea 0
+    ingresos_totales = cursor.fetchone()[0] or 0
     
-    # 3. Traemos la galería de flashes
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     
-    # 4. Datos para el gráfico de ingresos (últimos 5 completados)
     cursor.execute("SELECT fecha, precio FROM reservas WHERE estado = 'completada' ORDER BY fecha ASC LIMIT 5")
     datos_grafico = cursor.fetchall()
-    
     fechas_grafico = [fila[0] for fila in datos_grafico]
     precios_grafico = [fila[1] for fila in datos_grafico]
     
     conn.close()
     
-    # Enviamos todos los datos calculados al HTML
-    return render_template('admin.html', 
-                           lista_reservas=reservas, 
-                           lista_flashes=flashes, 
-                           fecha_filtro=fecha_filtro, 
-                           total_pendientes=total_pendientes, 
-                           total_completadas=total_completadas, 
-                           ingresos_totales=ingresos_totales,
-                           fechas_grafico=fechas_grafico, 
-                           precios_grafico=precios_grafico)
+    return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes, 
+                           fecha_filtro=fecha_filtro, total_pendientes=total_pendientes, 
+                           total_completadas=total_completadas, ingresos_totales=ingresos_totales,
+                           fechas_grafico=fechas_grafico, precios_grafico=precios_grafico)
 
 @app.route('/completar/<int:id>')
 def completar(id):
@@ -253,7 +223,6 @@ def completar(id):
         return redirect(url_for('login'))
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # Cambiamos el estado a 'completada' para que sume a los ingresos
     cursor.execute("UPDATE reservas SET estado = 'completada' WHERE id = ?", (id,))
     conn.commit()
     conn.close()
@@ -266,7 +235,6 @@ def pagar_deposito(id):
         return redirect(url_for('login'))
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # Marcamos la columna 'pagado' como 1 (Verdadero)
     cursor.execute("UPDATE reservas SET pagado = 1 WHERE id = ?", (id,))
     conn.commit()
     conn.close()
@@ -310,9 +278,7 @@ def editar(id):
         fecha = request.form.get('fecha')
         hora = request.form.get('hora')
         cursor.execute("""
-            UPDATE reservas 
-            SET nombre = ?, email = ?, idea = ?, fecha = ?, hora = ? 
-            WHERE id = ?
+            UPDATE reservas SET nombre = ?, email = ?, idea = ?, fecha = ?, hora = ? WHERE id = ?
         """, (nombre, email, idea, fecha, hora, id))
         conn.commit()
         conn.close()
@@ -324,21 +290,18 @@ def editar(id):
         conn.close()
         return render_template('editar.html', reserva=reserva)
 
-
 # ==========================================
-# 4. RUTAS DE GALERÍA Y EXPORTACIÓN
+# 4. GALERÍA Y EXPORTACIÓN
 # ==========================================
 
 @app.route('/subir_flash', methods=['POST'])
 def subir_flash():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-        
     titulo = request.form.get('titulo')
     archivo = request.files['imagen']
     
     if archivo and archivo.filename != '':
-        # Subimos la foto a Cloudinary
         resultado = cloudinary.uploader.upload(archivo)
         url_imagen = resultado['secure_url']
         
@@ -348,7 +311,6 @@ def subir_flash():
         conn.commit()
         conn.close()
         flash('¡Flash subido con éxito! 🎨', 'success')
-        
     return redirect(url_for('admin'))
 
 @app.route('/borrar_flash/<int:id>')
@@ -367,21 +329,18 @@ def borrar_flash(id):
 def exportar():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-        
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
-    # Ahora exportamos también los precios y depósitos para tener un reporte financiero
     cursor.execute("SELECT nombre, email, idea, fecha, hora, precio, deposito, pagado, estado FROM reservas")
     reservas = cursor.fetchall()
     conn.close()
     
-    # Creamos el archivo de texto
     output = io.StringIO()
     output.write("=== REPORTE FINANCIERO INKFLOW ===\n\n")
     for r in reservas:
         estado_pago = "Pagado" if r[7] == 1 else "Pendiente"
         output.write(f"Cliente: {r[0]} | Email: {r[1]} | Idea: {r[2]}\n")
-        output.write(f"Fecha: {r[3]} {r[4]} | Total: ${r[5]} | Deposito: ${r[6]} ({estado_pago}) | Estado Cita: {r[8]}\n")
+        output.write(f"Fecha: {r[3]} {r[4]} | Total: ${r[5]} | Depósito: ${r[6]} ({estado_pago}) | Cita: {r[8]}\n")
         output.write("-" * 50 + "\n")
         
     return Response(output.getvalue(), mimetype="text/plain",

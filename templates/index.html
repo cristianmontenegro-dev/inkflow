@@ -4,17 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InkFlow — Reservas y drops para tatuadores</title>
-  
-  <!-- Google Fonts: Syne & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-  
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 
-  <!-- CONTENEDOR DE MENSAJES FLASH -->
   <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -25,7 +21,6 @@
     {% endwith %}
   </div>
 
-  <!-- NAVEGACIÓN -->
   <nav class="nav">
     <div class="nav__logo">InkFlow</div>
     <ul class="nav__links">
@@ -37,46 +32,53 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
+    <!-- HERO PREMIUM -->
   <header class="hero">
-    <h1 class="hero__title">Del primer trazo<br>a tu primer cliente.</h1>
+    <!-- Etiqueta flotante superior -->
+    <div class="hero__badge">
+      <span class="pulse-dot"></span> Agenda abierta para nuevos proyectos
+    </div>
+        <h1 class="hero__title">
+      Del primer trazo<br>
+      <span class="text-accent">a tu primer cliente.</span>
+    </h1>
+    
     <p class="hero__subtitle">
-      InkFlow es el sistema de reservas, drops y seguimiento para tatuadores que están construyendo su camino con disciplina y arte.
+      Eleva tu experiencia. Diseños exclusivos, reservas seguras y seguimiento profesional. 
+      <strong>Cristian Rojas</strong>, tatuador independiente construyendo arte con disciplina.
     </p>
+    
     <div class="hero__buttons">
-      <a href="#reservar" class="btn btn--primary">Reservar Cita</a>
-      <a href="#galeria" class="btn btn--ghost">Ver Diseños</a>
+      <a href="#reservar" class="btn btn--primary">Reservar mi Cita 🖤</a>
+      <a href="#galeria" class="btn btn--ghost">Ver Galería</a>
     </div>
   </header>
 
-  <!-- POR QUÉ ELEGIRME (FEATURES) -->
   <section class="features" id="features">
     <h2 class="section-title">¿Por qué tatuarte conmigo?</h2>
     <p class="section-subtitle">Compromiso, arte y seguridad en cada trazo</p>
     <div class="features__grid">
       <article class="card">
         <div class="card__icon">🎨</div>
-        <h3>Diseños 100% Personalizados</h3>
-        <p>Cada trazo es único. Trabajamos juntos tu idea hasta que quede perfecta para ti.</p>
+        <h3>Diseños Personalizados</h3>
+        <p>Cada trazo es único. Trabajamos tu idea hasta que quede perfecta para ti.</p>
       </article>
       <article class="card">
         <div class="card__icon">🛡️</div>
         <h3>Bioseguridad Garantizada</h3>
-        <p>Material desechable, esterilización y las mejores prácticas para tu tranquilidad.</p>
+        <p>Material desechable, esterilización y las mejores prácticas.</p>
       </article>
       <article class="card">
         <div class="card__icon">💎</div>
         <h3>Cupos Limitados</h3>
-        <p>Para garantizar la calidad, solo abro unos pocos cupos al mes. Asegura el tuyo con tu depósito.</p>
+        <p>Para garantizar la calidad, abro pocos cupos al mes. Asegura el tuyo.</p>
       </article>
     </div>
   </section>
 
-  <!-- GALERÍA DE FLASHES -->
   <section id="galeria" class="features" style="padding-top: 0;">
     <h2 class="section-title">Galería de Flash</h2>
     <p class="section-subtitle">Diseños exclusivos listos para tatuar</p>
-    
     {% if lista_flashes %}
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; padding: 0 5%;">
       {% for flash in lista_flashes %}
@@ -91,11 +93,9 @@
     {% endif %}
   </section>
 
-  <!-- RESEÑAS DE CLIENTES -->
   <section id="resenas" style="padding: 0 5% 6rem; max-width: 1100px; margin: 0 auto;">
     <h2 class="section-title">Lo que dicen mis clientes</h2>
     <p class="section-subtitle">Experiencias reales de personas que confiaron en mi arte</p>
-    
     {% if lista_resenas %}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 0 5%;">
       {% for resena in lista_resenas %}
@@ -111,33 +111,26 @@
     {% else %}
       <p style="text-align: center; color: var(--text-muted);">Pronto aparecerán las primeras reseñas.</p>
     {% endif %}
-    
     <div style="text-align: center; margin-top: 2rem;">
       <a href="/dejar-resena" class="btn btn--ghost" style="font-size: 0.9rem;">Deja tu reseña aquí</a>
     </div>
   </section>
 
-  <!-- FORMULARIO DE RESERVA -->
   <div style="padding: 2rem 5%; max-width: 650px; margin: 0 auto;" id="reservar">
     <section class="card" style="padding: 3rem 2rem;">
       <h2 class="section-title" style="margin-bottom: 0.5rem; font-size: 2rem;">Asegura tu Cita</h2>
-      <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem;">Cuéntame qué tienes en mente. Los cupos se confirman con el depósito.</p>
+      <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem;">Los cupos se confirman con el depósito.</p>
       
       <form action="/reservar" method="POST" class="form-group">
         <input type="text" name="nombre" class="form-input" placeholder="Tu nombre completo" required>
         <input type="email" name="email" class="form-input" placeholder="Tu correo electrónico" required>
-        <input type="text" name="idea" class="form-input" placeholder="Idea del tatuaje (ej: un león en el antebrazo)" required>
+        <input type="text" name="idea" class="form-input" placeholder="Idea del tatuaje" required>
         
-        <!-- PRECIO Y DEPÓSITO AGRUPADOS -->
         <div style="display: flex; gap: 1rem; width: 100%; flex-wrap: wrap;">
           <input type="number" name="precio" class="form-input" placeholder="Presupuesto total (COP)" required step="1000" style="flex: 1; min-width: 200px;">
-          <input type="number" name="deposito" class="form-input" placeholder="Depósito para asegurar (COP)" required step="1000" style="flex: 1; min-width: 200px;">
+          <input type="number" name="deposito" class="form-input" placeholder="Depósito (COP)" required step="1000" style="flex: 1; min-width: 200px;">
         </div>
-        
-        <!-- EXPLICACIÓN DEL DEPÓSITO -->
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: -0.5rem; margin-bottom: 0.5rem; text-align: center;">
-          * El depósito se abona al total de tu tatuaje y garantiza tu cupo.
-        </p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: -0.5rem; text-align: center;">* El depósito se abona al total y garantiza tu cupo.</p>
 
         <div style="display: flex; gap: 1rem; width: 100%;">
           <input type="date" name="fecha" class="form-input" required style="flex: 1;">
@@ -148,31 +141,21 @@
       </form>
       
       <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="/mi-perfil" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
-          ¿Ya eres cliente? Consulta tus puntos aquí →
-        </a>
+        <a href="/mi-perfil" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">¿Ya eres cliente? Consulta tus puntos →</a>
       </div>
     </section>
   </div>
 
-  <!-- FOOTER -->
   <footer style="text-align: center; padding: 4rem 5%; border-top: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.95rem; margin-top: 4rem;">
     <p>Construido con disciplina, café y tinta 🖋️</p>
     <p style="font-weight: 600; color: var(--text-main); margin-top: 0.5rem;">Cristian Rojas — Tatuador & Developer</p>
-    <p style="margin-top: 0.5rem;">
-      <a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">📸 Sígueme en Instagram</a>
-    </p>
+    <p style="margin-top: 0.5rem;"><a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">📸 Sígueme en Instagram</a></p>
   </footer>
 
-  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
-  <a href="https://wa.me/573219341966?text=Hola%20Cristian,%20vengo%20de%20InkFlow%20y%20quiero%20cotizar%20un%20tatuaje" 
-     target="_blank" 
-     class="whatsapp-btn" 
-     title="¡Escríbeme por WhatsApp!">
+  <a href="https://wa.me/573219341966?text=Hola%20Cristian,%20vengo%20de%20InkFlow%20y%20quiero%20cotizar%20un%20tatuaje" target="_blank" class="whatsapp-btn" title="¡Escríbeme!">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="35" height="35">
       <path d="M12.031 0C5.406 0 0 5.406 0 12.031c0 2.115.546 4.104 1.503 5.838L.081 24l6.299-1.65c1.693.922 3.62 1.437 5.651 1.437 6.625 0 12.031-5.406 12.031-12.031S18.656 0 12.031 0zm6.842 17.143c-.281.787-1.406 1.504-2.156 1.575-.75.07-1.481.351-4.219-.844-3.375-1.469-5.531-4.875-5.719-5.109-.188-.234-1.406-1.875-1.406-3.562 0-1.687.881-2.531 1.219-2.859.338-.328.75-.422 1.031-.422.281 0 .562 0 .797.011.256.011.599-.099.938.721.353.855 1.159 2.834 1.266 3.047.105.211.176.459.035.741-.14.281-.211.459-.422.703-.211.244-.443.545-.633.732-.211.211-.431.443-.187.865.244.422 1.084 1.781 2.322 2.885 1.598 1.429 2.94 1.875 3.361 2.088.422.211.668.176.915-.106.244-.281 1.054-1.23 1.335-1.652.281-.422.562-.351.938-.211.375.14 2.391 1.125 2.801 1.336.41.211.682.316.782.486.099.17.099.986-.182 1.773z"/>
     </svg>
   </a>
-
 </body>
 </html>
