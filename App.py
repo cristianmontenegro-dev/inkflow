@@ -47,7 +47,6 @@ def init_db():
         )
     ''')
     
-    # Tabla de Reseñas
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS resenas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,7 +55,32 @@ def init_db():
             estrellas INTEGER NOT NULL
         )
     ''')
-    
+
+        # Tabla de Configuración (Para la marca del tatuador)
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS configuracion (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre_artista TEXT DEFAULT 'Cristian Rojas',
+            biografia TEXT DEFAULT 'Tatuador independiente construyendo arte con disciplina.',
+            instagram TEXT DEFAULT 'cristian_rojas328',
+            whatsapp TEXT DEFAULT '573219341966',
+            titulo_principal TEXT DEFAULT 'Del primer trazo a tu primer cliente.'
+        )
+    ''')
+
+    cursor.execute("SELECT COUNT(*) FROM configuracion")
+    if cursor.fetchone()[0] == 0:
+        cursor.execute('''
+            INSERT INTO configuracion (nombre_artista, biografia, instagram, whatsapp, titulo_principal)
+            VALUES ('Cristian Rojas', 'Tatuador independiente construyendo arte con disciplina.', 'cristian_rojas328', '573219341966', 'Del primer trazo a tu primer cliente.')
+        ''')
+        
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS suscriptores (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL
+        )
+    ''')
     conn.commit()
     conn.close()
 
@@ -71,15 +95,18 @@ def inicio():
     conn = sqlite3.connect('inkflow.db')
     cursor = conn.cursor()
     
-    # Traemos los flashes y las 3 reseñas más recientes
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     
     cursor.execute("SELECT * FROM resenas ORDER BY id DESC LIMIT 3") 
     resenas = cursor.fetchall()
     
+    # Traemos la CONFIGURACIÓN del tatuador
+    cursor.execute("SELECT * FROM configuracion WHERE id = 1")
+    config = cursor.fetchone()
+    
     conn.close()
-    return render_template('index.html', lista_flashes=flashes, lista_resenas=resenas)
+    return render_template('index.html', lista_flashes=flashes, lista_resenas=resenas, config=config)
 
 @app.route('/reservar', methods=['POST'])
 def reservar():
@@ -345,6 +372,48 @@ def exportar():
         
     return Response(output.getvalue(), mimetype="text/plain",
                     headers={"Content-Disposition": "attachment;filename=reporte_inkflow.txt"})
+
+@app.route('/configuracion', methods=['GET', 'POST'])
+def configuracion():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    
+    if request.method == 'POST':
+        nombre = request.form.get('nombre_artista')
+        bio = request.form.get('biografia')
+        insta = request.form.get('instagram')
+        wpp = request.form.get('whatsapp')
+        titulo = request.form.get('titulo_principal')
+        
+        cursor.execute("""
+            UPDATE configuracion SET nombre_artista = ?, biografia = ?, instagram = ?, whatsapp = ?, titulo_principal = ? WHERE id = 1
+        """, (nombre, bio, insta, wpp, titulo))
+        conn.commit()
+        flash('¡Configuración guardada! Tu página se ha actualizado. ✨', 'success')
+        return redirect(url_for('configuracion'))
+        
+    cursor.execute("SELECT * FROM configuracion WHERE id = 1")
+    config = cursor.fetchone()
+    conn.close()
+    
+    return render_template('configuracion.html', config=config)
+
+@app.route('/suscribirse', methods=['POST'])
+def suscribirse():
+    email = request.form.get('email_suscriptor')
+    conn = sqlite3.connect('inkflow.db')
+    cursor = conn.cursor()
+    try:
+        cursor.execute("INSERT INTO suscriptores (email) VALUES (?)", (email,))
+        conn.commit()
+        flash('¡Estás en la lista VIP! Recibirás mis próximos drops antes que nadie. 🖤', 'success')
+    except sqlite3.IntegrityError:
+        flash('Este correo ya está en la lista. ¡Atento a las novedades! 😉', 'error')
+    conn.close()
+    return redirect(url_for('inicio'))
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):

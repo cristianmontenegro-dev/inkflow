@@ -30,6 +30,11 @@
       <li><a href="#reservar">Reservas</a></li>
       <li><a href="/mi-perfil" style="color: var(--accent); font-weight: 600;">Mi Perfil</a></li>
     </ul>
+      <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </ul>
+  </nav>
   </nav>
 
     <!-- HERO PREMIUM -->
@@ -38,14 +43,13 @@
     <div class="hero__badge">
       <span class="pulse-dot"></span> Agenda abierta para nuevos proyectos
     </div>
-        <h1 class="hero__title">
-      Del primer trazo<br>
-      <span class="text-accent">a tu primer cliente.</span>
+         <h1 class="hero__title">
+      {{ config[5] }}
     </h1>
     
     <p class="hero__subtitle">
-      Eleva tu experiencia. Diseños exclusivos, reservas seguras y seguimiento profesional. 
-      <strong>Cristian Rojas</strong>, tatuador independiente construyendo arte con disciplina.
+      {{ config[2] }} <br> 
+      <strong>{{ config[1] }}</strong>
     </p>
     
     <div class="hero__buttons">
@@ -150,12 +154,25 @@
     <p>Construido con disciplina, café y tinta 🖋️</p>
     <p style="font-weight: 600; color: var(--text-main); margin-top: 0.5rem;">Cristian Rojas — Tatuador & Developer</p>
     <p style="margin-top: 0.5rem;"><a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">📸 Sígueme en Instagram</a></p>
+    <!-- CAPTURA DE CLIENTES VIP -->
+  <section style="padding: 4rem 5%; text-align: center; background: rgba(230, 57, 70, 0.05); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <h2 class="section-title" style="font-size: 2rem;">Únete a la Lista VIP 💎</h2>
+    <p class="section-subtitle" style="margin-bottom: 2rem;">Recibe mis nuevos diseños (drops) y promociones exclusivas antes que nadie.</p>
+    
+    <form action="/suscribirse" method="POST" style="max-width: 400px; margin: 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
+      <input type="email" name="email_suscriptor" class="form-input" placeholder="Tu mejor correo electrónico" required style="flex: 1; min-width: 200px;">
+      <button type="submit" class="btn btn--primary">Unirme</button>
+    </form>
+  </section>
   </footer>
 
-  <a href="https://wa.me/573219341966?text=Hola%20Cristian,%20vengo%20de%20InkFlow%20y%20quiero%20cotizar%20un%20tatuaje" target="_blank" class="whatsapp-btn" title="¡Escríbeme!">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="35" height="35">
-      <path d="M12.031 0C5.406 0 0 5.406 0 12.031c0 2.115.546 4.104 1.503 5.838L.081 24l6.299-1.65c1.693.922 3.62 1.437 5.651 1.437 6.625 0 12.031-5.406 12.031-12.031S18.656 0 12.031 0zm6.842 17.143c-.281.787-1.406 1.504-2.156 1.575-.75.07-1.481.351-4.219-.844-3.375-1.469-5.531-4.875-5.719-5.109-.188-.234-1.406-1.875-1.406-3.562 0-1.687.881-2.531 1.219-2.859.338-.328.75-.422 1.031-.422.281 0 .562 0 .797.011.256.011.599-.099.938.721.353.855 1.159 2.834 1.266 3.047.105.211.176.459.035.741-.14.281-.211.459-.422.703-.211.244-.443.545-.633.732-.211.211-.431.443-.187.865.244.422 1.084 1.781 2.322 2.885 1.598 1.429 2.94 1.875 3.361 2.088.422.211.668.176.915-.106.244-.281 1.054-1.23 1.335-1.652.281-.422.562-.351.938-.211.375.14 2.391 1.125 2.801 1.336.41.211.682.316.782.486.099.17.099.986-.182 1.773z"/>
+
+  <a href="https://wa.me/{{ config[4] }}?text=Hola%20{{ config[1] }},%20vengo%20de%20InkFlow" target="_blank" class="whatsapp-btn" title="¡Escríbeme!"></a>    
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="35" height="35">
+    <path d="M12.031 0C5.406 0 0 5.406 0 12.031c0 2.115.546 4.104 1.503 5.838L.081 24l6.299-1.65c1.693.922 3.62 1.437 5.651 1.437 6.625 0 12.031-5.406 12.031-12.031S18.656 0 12.031 0zm6.842 17.143c-.281.787-1.406 1.504-2.156 1.575-.75.07-1.481.351-4.219-.844-3.375-1.469-5.531-4.875-5.719-5.109-.188-.234-1.406-1.875-1.406-3.562 0-1.687.881-2.531 1.219-2.859.338-.328.75-.422 1.031-.422.281 0 .562 0 .797.011.256.011.599-.099.938.721.353.855 1.159 2.834 1.266 3.047.105.211.176.459.035.741-.14.281-.211.459-.422.703-.211.244-.443.545-.633.732-.211.211-.431.443-.187.865.244.422 1.084 1.781 2.322 2.885 1.598 1.429 2.94 1.875 3.361 2.088.422.211.668.176.915-.106.244-.281 1.054-1.23 1.335-1.652.281-.422.562-.351.938-.211.375.14 2.391 1.125 2.801 1.336.41.211.682.316.782.486.099.17.099.986-.182 1.773z"/>
     </svg>
   </a>
+  <script src="/static/js/main.js"></script>
+</body>
 </body>
 </html>

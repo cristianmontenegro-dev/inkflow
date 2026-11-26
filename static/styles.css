@@ -488,3 +488,75 @@ body::before {
   .hero__buttons { flex-direction: column; width: 100%; }
   .hero__buttons .btn { width: 100%; }
 }
+
+/* =========================================
+   MODO CLARO / OSCURO
+   ========================================= */
+
+/* Definimos los colores para el modo claro */
+[data-theme="light"] {
+  --bg-deep: #f4f4f6;
+  --bg-card: rgba(255, 255, 255, 0.8);
+  --bg-input: #ffffff;
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.2);
+  --text-main: #09090b;
+  --text-muted: #52525b;
+}
+
+/* Ajustes específicos para que el modo claro se vea bien */
+[data-theme="light"] body {
+  background-color: var(--bg-deep);
+}
+
+[data-theme="light"] body::before {
+  opacity: 0.3; /* Reducimos el brillo rojo en modo claro */
+}
+
+[data-theme="light"] .nav {
+  background: rgba(244, 244, 246, 0.8);
+}
+
+[data-theme="light"] .hero__title {
+  background: linear-gradient(135deg, #09090b 20%, #52525b 60%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1.2rem;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(15deg) scale(1.1);
+  border-color: var(--accent);
+}
+
+[data-theme="light"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Arreglo del logo en modo claro */
+[data-theme="light"] .nav__logo {
+  background: linear-gradient(135deg, #09090b 30%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
