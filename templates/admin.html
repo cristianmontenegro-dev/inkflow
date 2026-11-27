@@ -1,171 +1,172 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — InkFlow</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body style="padding-top: 6rem;">
-  
-  <!-- CONTENEDOR DE MENSAJES FLASH -->
-  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash-message {{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+{% extends "base.html" %}
+{% block title %}Panel de Admin — InkFlow{% endblock %}
+{% block body_class %}ik-admin{% endblock %}
+
+{% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block nav_links %}
+<li><a href="/">Inicio</a></li>
+<li><a href="/historial">Historial</a></li>
+<li><a href="/configuracion">Configuración</a></li>
+<li><a href="/logout" class="ik-nav__accent">Salir</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="ik-wide">
+
+  <!-- PAGE HEADER -->
+  <div class="ik-page-header">
+    <h1 class="ik-title ik-title--left" style="margin-bottom: 0;">🔒 Panel de Administrador</h1>
+    <div class="ik-page-header__actions">
+      <a href="/configuracion" class="ik-btn ik-btn--ghost ik-btn--sm ik-btn--blue">⚙️ Configuración</a>
+      <a href="/logout" class="ik-btn ik-btn--ghost ik-btn--sm">Salir 🚪</a>
+    </div>
   </div>
 
-  <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 5%;">
-    
-    <!-- CABECERA -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
-      <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2.2rem;">🔒 Panel de Administrador</h1>
-      <div style="display: flex; gap: 1rem;">
-        <a href="/configuracion" class="btn btn--ghost" style="font-size: 0.9rem; color: #60a5fa; border-color: rgba(96, 165, 250, 0.3);">⚙️ Configuración</a>
-        <a href="/logout" class="btn btn--ghost" style="font-size: 0.9rem;">Salir 🚪</a>
-      </div>
+  <!-- STATS -->
+  <div class="ik-dash">
+    <div class="ik-stat ik-stat--pending">
+      <h4 class="ik-stat__label">Citas Pendientes</h4>
+      <p class="ik-stat__value">{{ total_pendientes }}</p>
     </div>
-
-    <!-- TARJETAS DE ESTADÍSTICAS -->
-    <div class="dashboard-grid">
-      <div class="stat-card pendientes">
-        <h4 class="stat-title">Citas Pendientes</h4>
-        <p class="stat-value">{{ total_pendientes }}</p>
-      </div>
-      <div class="stat-card completados">
-        <h4 class="stat-title">Tatuajes Completados</h4>
-        <p class="stat-value">{{ total_completadas }}</p>
-      </div>
-      <div class="stat-card ingresos">
-        <h4 class="stat-title">Ingresos Totales</h4>
-        <p class="stat-value gold">${{ "{:,.0f}".format(ingresos_totales) }}</p>
-      </div>
+    <div class="ik-stat ik-stat--done">
+      <h4 class="ik-stat__label">Tatuajes Completados</h4>
+      <p class="ik-stat__value">{{ total_completadas }}</p>
     </div>
-
-    <!-- GRÁFICO DE INGRESOS -->
-    {% if fechas_grafico %}
-    <div class="card" style="margin-bottom: 2rem; padding: 2rem;">
-      <h3 style="color: white; margin-bottom: 1.5rem; font-size: 1.2rem;">📈 Historial de Ingresos</h3>
-      <canvas id="graficoIngresos" data-fechas='{{ fechas_grafico | tojson }}' data-precios='{{ precios_grafico | tojson }}' style="max-height: 300px;"></canvas>
+    <div class="ik-stat ik-stat--revenue">
+      <h4 class="ik-stat__label">Ingresos Totales</h4>
+      <p class="ik-stat__value ik-stat__value--gold">${{ "{:,.0f}".format(ingresos_totales) }}</p>
     </div>
-    <script>
-      const canvas = document.getElementById('graficoIngresos');
-      const fechas = JSON.parse(canvas.dataset.fechas);
-      const precios = JSON.parse(canvas.dataset.precios);
-      const ctx = canvas.getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: fechas,
-          datasets: [{ label: 'Ingresos', data: precios, backgroundColor: 'rgba(230, 57, 70, 0.6)', borderColor: '#e63946', borderWidth: 2, borderRadius: 6 }]
-        },
-        options: { 
-          responsive: true, 
-          plugins: { legend: { display: false } }, 
-          scales: { 
-            y: { beginAtZero: true, ticks: { color: '#9494a0' }, grid: { color: 'rgba(255,255,255,0.05)' } }, 
-            x: { ticks: { color: '#9494a0' }, grid: { display: false } } 
-          } 
-        }
-      });
-    </script>
-    {% endif %}
+  </div>
 
-    <!-- FILTRO POR FECHA -->
-    <div class="card" style="padding: 1.5rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-      <h3 style="color: white; margin: 0; flex: 1; font-size: 1.1rem;">Filtrar citas por fecha 📅</h3>
-      <form method="GET" action="/admin" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-        <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="form-input" style="padding: 0.6rem 1rem;">
-        <button type="submit" class="btn btn--primary" style="padding: 0.6rem 1.5rem;">Buscar</button>
-        {% if fecha_filtro %}<a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar ❌</a>{% endif %}
+  <!-- CHART -->
+  {% if fechas_grafico %}
+  <div class="ik-card ik-card--compact" style="margin-bottom: 2rem;">
+    <h3 style="color: var(--text-main); margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 600;">📈 Historial de Ingresos</h3>
+    <canvas id="graficoIngresos" data-fechas='{{ fechas_grafico | tojson }}' data-precios='{{ precios_grafico | tojson }}' style="max-height: 280px;"></canvas>
+  </div>
+  {% endif %}
+
+  <!-- FILTER -->
+  <div class="ik-card ik-card--compact" style="margin-bottom: 2rem;">
+    <div class="ik-filter">
+      <span class="ik-filter__label">📅 Filtrar citas por fecha</span>
+      <form method="GET" action="/admin" class="ik-filter" style="flex: 0;">
+        <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="ik-input">
+        <button type="submit" class="ik-btn ik-btn--primary ik-btn--sm">Buscar</button>
+        {% if fecha_filtro %}<a href="/admin" style="color: var(--text-muted); font-size: 0.85rem; white-space: nowrap;">Limpiar ❌</a>{% endif %}
       </form>
     </div>
+  </div>
 
-    <!-- LISTA DE RESERVAS PENDIENTES -->
-    {% if lista_reservas %}
-      <ul class="reservas-list">
-        {% for reserva in lista_reservas %}
-          <li class="reserva-item">
-            <div class="reserva-info">
-              <span class="reserva-name">{{ reserva[1] }}</span>
-              <span class="reserva-idea">{{ reserva[3] }}</span>
-              <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
-                📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }} <br>
-                <strong style="color: white;">💰 Total: ${{ "{:,.0f}".format(reserva[6] or 0) }}</strong> | 
-                <span style="color: #ffd700;">💵 Depósito: ${{ "{:,.0f}".format(reserva[7] or 0) }}</span>
-              </span>
-            </div>
-            
-            <div class="reserva-meta" style="flex-wrap: wrap; gap: 8px;">
-              <span class="badge badge-pendiente">ID: {{ reserva[0] }}</span>
-              
-              <!-- BOTÓN DE WOMBI / WHATSAPP -->
-              {% if reserva[8] == 1 %}
-                <span class="badge" style="background: rgba(45, 106, 79, 0.2); color: #95d5b2; border: 1px solid #2d6a4f;">💸 Pagado</span>
-              {% else %}
-                <a href="https://wa.me/57{{ reserva[2] | replace('+', '') }}?text=Hola%20{{ reserva[1] }},%20soy%20{{ config[1] }}.%20Para%20confirmar%20tu%20cita%20del%20{{ reserva[4] }}%20a%20las%20{{ reserva[5] }},%20por%20favor%20abona%20el%20dep%C3%B3sito%20de%20${{ reserva[7] }}%20en%20este%20link:%20{{ config[6] }}" 
-                   target="_blank" 
-                   class="btn btn--primary" 
-                   style="background: #25D366; padding: 0.4rem 1rem; font-size: 0.85rem; box-shadow: none;">
-                   💳 Enviar Link Pago
-                </a>
-                <!-- BOTÓN MANUAL POR SI PAGA EN EFECTIVO -->
-                <a href="/pagar_deposito/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem; border-color: #ffd700; color: #ffd700;" title="Marcar como pagado manualmente">💵 Manual</a>
-              {% endif %}
-              
-              <!-- BOTONES DE ACCIÓN -->
-              <div style="display: flex; gap: 5px; margin-left: auto;">
-                <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 0.8rem;" title="Editar">✏️</a>
-                <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 0.8rem; background: #2d6a4f; box-shadow: none;" title="Completar">✅</a>
-                <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 0.8rem; color: var(--accent); border-color: var(--accent);" title="Borrar">🗑️</a>
-              </div>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <div class="card" style="text-align: center; padding: 3rem;">
-        <p style="color: var(--text-muted);">No hay reservas pendientes en este momento.</p>
+  <!-- BOOKING LIST -->
+  {% if lista_reservas %}
+  <ul class="ik-list">
+    {% for reserva in lista_reservas %}
+    <li class="ik-item">
+      <div class="ik-item__info">
+        <span class="ik-item__name">{{ reserva[1] }}</span>
+        <span class="ik-item__detail">{{ reserva[3] }}</span>
+        <span class="ik-item__meta">
+          📅 {{ reserva[4] }} &nbsp;🕒 {{ reserva[5] }}<br>
+          <strong>💰 Total: ${{ "{:,.0f}".format(reserva[6] or 0) }}</strong> &nbsp;·&nbsp;
+          <span style="color: var(--gold);">💵 Depósito: ${{ "{:,.0f}".format(reserva[7] or 0) }}</span>
+        </span>
       </div>
-    {% endif %}
-    
-    <!-- NAVEGACIÓN INFERIOR -->
-    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
-      <a href="/" class="btn btn--ghost">← Volver al inicio</a>
-      <a href="/historial" class="btn btn--ghost" style="color: #95d5b2; border-color: #2d6a4f;">📜 Ver historial</a>
-      <a href="/exportar" class="btn btn--ghost" style="color: var(--gold); border-color: rgba(255, 215, 0, 0.3);">📥 Exportar (.txt)</a>
-    </div>
+      <div class="ik-item__actions">
+        <span class="ik-badge ik-badge--id">ID: {{ reserva[0] }}</span>
 
-    <hr style="border-color: #333; margin: 3rem 0;">
+        {% if reserva[8] == 1 %}
+          <span class="ik-badge ik-badge--paid">💸 Pagado</span>
+        {% else %}
+          <a href="https://wa.me/57{{ reserva[2] | replace('+', '') }}?text=Hola%20{{ reserva[1] }},%20soy%20{{ config[1] }}.%20Para%20confirmar%20tu%20cita%20del%20{{ reserva[4] }}%20a%20las%20{{ reserva[5] }},%20por%20favor%20abona%20el%20dep%C3%B3sito%20de%20${{ reserva[7] }}%20en%20este%20link:%20{{ config[6] }}"
+             target="_blank" class="ik-btn ik-btn--whatsapp ik-btn--sm">💳 Link Pago</a>
+          <a href="/pagar_deposito/{{ reserva[0] }}" class="ik-btn ik-btn--ghost ik-btn--sm ik-btn--gold" title="Marcar como pagado">💵 Manual</a>
+        {% endif %}
 
-    <!-- SUBIR FLASH -->
-    <div class="card" style="margin-bottom: 3rem; padding: 2rem;">
-      <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Subir nuevo Flash 🎨</h3>
-      <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="form-group" style="flex-direction: row; flex-wrap: wrap; align-items: center;">
-        <input type="text" name="titulo" class="form-input" placeholder="Título del diseño" required style="flex: 1; min-width: 200px;">
-        <input type="file" name="imagen" accept="image/*" required class="form-input" style="flex: 1; min-width: 200px; padding: 0.8rem;">
-        <button type="submit" class="btn btn--primary">Subir a la Galería</button>
-      </form>
-    </div>
-
-    <!-- LISTA DE FLASHES -->
-    <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Tus flashes:</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
-      {% for flash in lista_flashes %}
-        <div class="card" style="padding: 1rem; text-align: center;">
-          <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem;">
-          <p style="color: white; font-size: 0.9rem; margin-bottom: 0.5rem;">{{ flash[1] }}</p>
-          <a href="/borrar_flash/{{ flash[0] }}" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; font-weight: 600;">🗑️ Borrar</a>
+        <div style="display: flex; gap: 4px; margin-left: auto;">
+          <a href="/editar/{{ reserva[0] }}" class="ik-btn ik-btn--ghost ik-btn--sm" title="Editar">✏️</a>
+          <a href="/completar/{{ reserva[0] }}" class="ik-btn ik-btn--success ik-btn--sm" title="Completar">✅</a>
+          <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="ik-btn ik-btn--ghost ik-btn--sm ik-btn--danger" title="Borrar">🗑️</a>
         </div>
-      {% endfor %}
-    </div>
-
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="ik-card" style="text-align: center; padding: 3rem;">
+    <p style="color: var(--text-muted);">No hay reservas pendientes en este momento.</p>
   </div>
-</body>
-</html>
+  {% endif %}
+
+  <!-- BOTTOM NAV -->
+  <div style="margin-top: 2.5rem; margin-bottom: 3rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+    <a href="/" class="ik-btn ik-btn--ghost">← Volver al inicio</a>
+    <a href="/historial" class="ik-btn ik-btn--ghost ik-btn--green-text">📜 Ver historial</a>
+    <a href="/exportar" class="ik-btn ik-btn--ghost ik-btn--gold">📥 Exportar (.txt)</a>
+  </div>
+
+  <hr style="border-color: var(--border-subtle); margin: 2.5rem 0;">
+
+  <!-- UPLOAD FLASH -->
+  <div class="ik-card ik-card--compact" style="margin-bottom: 2.5rem;">
+    <h3 style="color: var(--text-main); margin-bottom: 1.25rem; font-size: 1.1rem; font-weight: 600;">🎨 Subir nuevo Flash</h3>
+    <form action="/subir_flash" method="POST" enctype="multipart/form-data" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+      <input type="text" name="titulo" class="ik-input" placeholder="Título del diseño" required style="flex: 1; min-width: 200px;">
+      <input type="file" name="imagen" accept="image/*" required class="ik-input" style="flex: 1; min-width: 200px; padding: 0.7rem;">
+      <button type="submit" class="ik-btn ik-btn--primary">Subir a la Galería</button>
+    </form>
+  </div>
+
+  <!-- FLASH LIST -->
+  {% if lista_flashes %}
+  <h3 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 600;">Tus flashes:</h3>
+  <div class="ik-gallery" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); margin-bottom: 3rem;">
+    {% for flash_item in lista_flashes %}
+    <div class="ik-card" style="padding: 0.75rem; text-align: center;">
+      <img src="{{ flash_item[2] }}" alt="{{ flash_item[1] }}" style="width: 100%; height: 110px; object-fit: cover; border-radius: 10px; margin-bottom: 0.5rem;">
+      <p style="color: var(--text-main); font-size: 0.85rem; margin-bottom: 0.5rem; font-weight: 500;">{{ flash_item[1] }}</p>
+      <a href="/borrar_flash/{{ flash_item[0] }}" class="ik-btn ik-btn--ghost ik-btn--sm ik-btn--danger" style="width: 100%; font-size: 0.8rem;">🗑️ Borrar</a>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if fechas_grafico %}
+<script>
+  const canvas = document.getElementById('graficoIngresos');
+  if (canvas) {
+    const fechas = JSON.parse(canvas.dataset.fechas);
+    const precios = JSON.parse(canvas.dataset.precios);
+    new Chart(canvas.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: fechas,
+        datasets: [{
+          label: 'Ingresos',
+          data: precios,
+          backgroundColor: 'rgba(230, 57, 70, 0.5)',
+          borderColor: '#e63946',
+          borderWidth: 2,
+          borderRadius: 8,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { color: '#7c7c8a' }, grid: { color: 'rgba(255,255,255,0.03)' } },
+          x: { ticks: { color: '#7c7c8a' }, grid: { display: false } }
+        }
+      }
+    });
+  }
+</script>
+{% endif %}
+{% endblock %}

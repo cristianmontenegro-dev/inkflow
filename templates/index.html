@@ -1,178 +1,141 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>InkFlow — Reservas y drops para tatuadores</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}InkFlow — Reservas y drops para tatuadores{% endblock %}
+{% block meta_description %}{{ config[2] }} — {{ config[1] }}{% endblock %}
 
-  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash-message {{ category }}">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-  </div>
-
-  <nav class="nav">
-    <div class="nav__logo">InkFlow</div>
-    <ul class="nav__links">
-      <li><a href="#features">Por qué elegirme</a></li>
-      <li><a href="#galeria">Galería</a></li>
-      <li><a href="#resenas">Reseñas</a></li>
-      <li><a href="#reservar">Reservas</a></li>
-      <li><a href="/mi-perfil" style="color: var(--accent); font-weight: 600;">Mi Perfil</a></li>
-    </ul>
-      <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">
-        <span id="theme-icon">🌙</span>
-      </button>
-    </ul>
-  </nav>
-  </nav>
-
-    <!-- HERO PREMIUM -->
-  <header class="hero">
-    <!-- Etiqueta flotante superior -->
-    <div class="hero__badge">
-      <span class="pulse-dot"></span> Agenda abierta para nuevos proyectos
+{% block content %}
+  <!-- HERO -->
+  <header class="ik-hero">
+    <div class="ik-hero__badge">
+      <span class="ik-pulse"></span> Agenda abierta para nuevos proyectos
     </div>
-         <h1 class="hero__title">
-      {{ config[5] }}
-    </h1>
-    
-    <p class="hero__subtitle">
-      {{ config[2] }} <br> 
+    <h1 class="ik-hero__title">{{ config[5] }}</h1>
+    <p class="ik-hero__sub">
+      {{ config[2] }}<br>
       <strong>{{ config[1] }}</strong>
     </p>
-    
-    <div class="hero__buttons">
-      <a href="#reservar" class="btn btn--primary">Reservar mi Cita 🖤</a>
-      <a href="#galeria" class="btn btn--ghost">Ver Galería</a>
+    <div class="ik-hero__cta">
+      <a href="#reservar" class="ik-btn ik-btn--primary ik-btn--lg">Reservar mi Cita 🖤</a>
+      <a href="#galeria" class="ik-btn ik-btn--ghost ik-btn--lg">Ver Galería</a>
     </div>
   </header>
 
-  <section class="features" id="features">
-    <h2 class="section-title">¿Por qué tatuarte conmigo?</h2>
-    <p class="section-subtitle">Compromiso, arte y seguridad en cada trazo</p>
-    <div class="features__grid">
-      <article class="card">
-        <div class="card__icon">🎨</div>
+  <!-- FEATURES -->
+  <section class="ik-section" id="features">
+    <h2 class="ik-title ik-reveal">¿Por qué tatuarte conmigo?</h2>
+    <p class="ik-subtitle ik-reveal">Compromiso, arte y seguridad en cada trazo</p>
+    <div class="ik-features">
+      <article class="ik-card ik-feature ik-reveal">
+        <span class="ik-feature__icon">🎨</span>
         <h3>Diseños Personalizados</h3>
         <p>Cada trazo es único. Trabajamos tu idea hasta que quede perfecta para ti.</p>
       </article>
-      <article class="card">
-        <div class="card__icon">🛡️</div>
+      <article class="ik-card ik-feature ik-reveal">
+        <span class="ik-feature__icon">🛡️</span>
         <h3>Bioseguridad Garantizada</h3>
         <p>Material desechable, esterilización y las mejores prácticas.</p>
       </article>
-      <article class="card">
-        <div class="card__icon">💎</div>
+      <article class="ik-card ik-feature ik-reveal">
+        <span class="ik-feature__icon">💎</span>
         <h3>Cupos Limitados</h3>
         <p>Para garantizar la calidad, abro pocos cupos al mes. Asegura el tuyo.</p>
       </article>
     </div>
   </section>
 
-  <section id="galeria" class="features" style="padding-top: 0;">
-    <h2 class="section-title">Galería de Flash</h2>
-    <p class="section-subtitle">Diseños exclusivos listos para tatuar</p>
+  <!-- GALLERY -->
+  <section class="ik-section" id="galeria" style="padding-top: 0;">
+    <h2 class="ik-title ik-reveal">Galería de Flash</h2>
+    <p class="ik-subtitle ik-reveal">Diseños exclusivos listos para tatuar</p>
     {% if lista_flashes %}
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; padding: 0 5%;">
-      {% for flash in lista_flashes %}
-        <div class="card" style="padding: 1rem; text-align: center;">
-          <img src="{{ flash[2] }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
-          <h3 style="color: white; font-size: 1.1rem;">{{ flash[1] }}</h3>
-        </div>
-      {% endfor %}
-    </div>
-    {% else %}
-      <p style="text-align: center; color: var(--text-muted);">Pronto subiré nuevos diseños.</p>
-    {% endif %}
-  </section>
-
-  <section id="resenas" style="padding: 0 5% 6rem; max-width: 1100px; margin: 0 auto;">
-    <h2 class="section-title">Lo que dicen mis clientes</h2>
-    <p class="section-subtitle">Experiencias reales de personas que confiaron en mi arte</p>
-    {% if lista_resenas %}
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 0 5%;">
-      {% for resena in lista_resenas %}
-        <div class="card" style="padding: 2rem; text-align: left;">
-          <div style="color: #ffd700; font-size: 1.2rem; margin-bottom: 1rem;">
-            {% for i in range(resena[3]) %}⭐{% endfor %}
-          </div>
-          <p style="color: var(--text-main); font-style: italic; margin-bottom: 1.5rem;">"{{ resena[2] }}"</p>
-          <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">- Cliente verificado</p>
-        </div>
-      {% endfor %}
-    </div>
-    {% else %}
-      <p style="text-align: center; color: var(--text-muted);">Pronto aparecerán las primeras reseñas.</p>
-    {% endif %}
-    <div style="text-align: center; margin-top: 2rem;">
-      <a href="/dejar-resena" class="btn btn--ghost" style="font-size: 0.9rem;">Deja tu reseña aquí</a>
-    </div>
-  </section>
-
-  <div style="padding: 2rem 5%; max-width: 650px; margin: 0 auto;" id="reservar">
-    <section class="card" style="padding: 3rem 2rem;">
-      <h2 class="section-title" style="margin-bottom: 0.5rem; font-size: 2rem;">Asegura tu Cita</h2>
-      <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem;">Los cupos se confirman con el depósito.</p>
-      
-      <form action="/reservar" method="POST" class="form-group">
-        <input type="text" name="nombre" class="form-input" placeholder="Tu nombre completo" required>
-        <input type="email" name="email" class="form-input" placeholder="Tu correo electrónico" required>
-        <input type="text" name="idea" class="form-input" placeholder="Idea del tatuaje" required>
-        
-        <div style="display: flex; gap: 1rem; width: 100%; flex-wrap: wrap;">
-          <input type="number" name="precio" class="form-input" placeholder="Presupuesto total (COP)" required step="1000" style="flex: 1; min-width: 200px;">
-          <input type="number" name="deposito" class="form-input" placeholder="Depósito (COP)" required step="1000" style="flex: 1; min-width: 200px;">
-        </div>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: -0.5rem; text-align: center;">* El depósito se abona al total y garantiza tu cupo.</p>
-
-        <div style="display: flex; gap: 1rem; width: 100%;">
-          <input type="date" name="fecha" class="form-input" required style="flex: 1;">
-          <input type="time" name="hora" class="form-input" required style="flex: 1;">
-        </div>
-
-        <button type="submit" class="btn btn--primary" style="margin-top: 1rem; width: 100%; font-size: 1.1rem;">Asegurar mi Cita 🖤</button>
-      </form>
-      
-      <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="/mi-perfil" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">¿Ya eres cliente? Consulta tus puntos →</a>
+    <div class="ik-gallery">
+      {% for flash_item in lista_flashes %}
+      <div class="ik-card ik-gallery__item ik-reveal" style="padding: 0;">
+        <img src="{{ flash_item[2] }}" alt="{{ flash_item[1] }}" class="ik-gallery__img">
+        <div class="ik-gallery__label">{{ flash_item[1] }}</div>
       </div>
-    </section>
-  </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align: center; color: var(--text-muted);">Pronto subiré nuevos diseños.</p>
+    {% endif %}
+  </section>
 
-  <footer style="text-align: center; padding: 4rem 5%; border-top: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.95rem; margin-top: 4rem;">
-    <p>Construido con disciplina, café y tinta 🖋️</p>
-    <p style="font-weight: 600; color: var(--text-main); margin-top: 0.5rem;">Cristian Rojas — Tatuador & Developer</p>
-    <p style="margin-top: 0.5rem;"><a href="https://instagram.com/cristian_rojas328" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600;">📸 Sígueme en Instagram</a></p>
-    <!-- CAPTURA DE CLIENTES VIP -->
-  <section style="padding: 4rem 5%; text-align: center; background: rgba(230, 57, 70, 0.05); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
-    <h2 class="section-title" style="font-size: 2rem;">Únete a la Lista VIP 💎</h2>
-    <p class="section-subtitle" style="margin-bottom: 2rem;">Recibe mis nuevos diseños (drops) y promociones exclusivas antes que nadie.</p>
-    
-    <form action="/suscribirse" method="POST" style="max-width: 400px; margin: 0 auto; display: flex; gap: 10px; flex-wrap: wrap;">
-      <input type="email" name="email_suscriptor" class="form-input" placeholder="Tu mejor correo electrónico" required style="flex: 1; min-width: 200px;">
-      <button type="submit" class="btn btn--primary">Unirme</button>
+  <!-- REVIEWS -->
+  <section class="ik-section" id="resenas" style="padding-top: 0;">
+    <h2 class="ik-title ik-reveal">Lo que dicen mis clientes</h2>
+    <p class="ik-subtitle ik-reveal">Experiencias reales de personas que confiaron en mi arte</p>
+    {% if lista_resenas %}
+    <div class="ik-reviews">
+      {% for resena in lista_resenas %}
+      <div class="ik-card ik-reveal" style="text-align: left;">
+        <div class="ik-review__stars">{% for i in range(resena[3]) %}⭐{% endfor %}</div>
+        <p class="ik-review__text">"{{ resena[2] }}"</p>
+        <p class="ik-review__author">— Cliente verificado</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align: center; color: var(--text-muted);">Pronto aparecerán las primeras reseñas.</p>
+    {% endif %}
+    <div style="text-align: center; margin-top: 2.5rem;">
+      <a href="/dejar-resena" class="ik-btn ik-btn--ghost">Deja tu reseña aquí</a>
+    </div>
+  </section>
+
+  <!-- BOOKING FORM -->
+  <section class="ik-narrow ik-reveal" id="reservar" style="padding-bottom: 4rem;">
+    <div class="ik-card" style="padding: 3rem 2.5rem;">
+      <h2 class="ik-title ik-title--sm" style="margin-bottom: 0.5rem;">Asegura tu Cita</h2>
+      <p class="ik-subtitle" style="margin-bottom: 2rem;">Los cupos se confirman con el depósito.</p>
+
+      <form action="/reservar" method="POST" class="ik-form">
+        <input type="text" name="nombre" class="ik-input" placeholder="Tu nombre completo" required>
+        <input type="email" name="email" class="ik-input" placeholder="Tu correo electrónico" required>
+        <input type="text" name="idea" class="ik-input" placeholder="Idea del tatuaje" required>
+
+        <div class="ik-form-row">
+          <input type="number" name="precio" class="ik-input" placeholder="Presupuesto total (COP)" required step="1000">
+          <input type="number" name="deposito" class="ik-input" placeholder="Depósito (COP)" required step="1000">
+        </div>
+        <p class="ik-hint" style="text-align: center;">* El depósito se abona al total y garantiza tu cupo.</p>
+
+        <div class="ik-form-row">
+          <input type="date" name="fecha" class="ik-input" required>
+          <input type="time" name="hora" class="ik-input" required>
+        </div>
+
+        <button type="submit" class="ik-btn ik-btn--primary ik-btn--full ik-btn--lg" style="margin-top: 0.5rem;">Asegurar mi Cita 🖤</button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="/mi-perfil" style="color: var(--text-muted); font-size: 0.9rem;">¿Ya eres cliente? Consulta tus puntos →</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block footer %}
+  <!-- VIP -->
+  <section class="ik-vip ik-reveal">
+    <h2 class="ik-title ik-title--sm">Únete a la Lista VIP 💎</h2>
+    <p class="ik-subtitle" style="margin-bottom: 2rem;">Recibe mis nuevos diseños (drops) y promociones exclusivas antes que nadie.</p>
+    <form action="/suscribirse" method="POST" class="ik-vip__form">
+      <input type="email" name="email_suscriptor" class="ik-input" placeholder="Tu mejor correo electrónico" required>
+      <button type="submit" class="ik-btn ik-btn--primary">Unirme</button>
     </form>
   </section>
+
+  <footer class="ik-footer">
+    <p>Construido con disciplina, café y tinta 🖋️</p>
+    <p class="ik-footer__brand">{{ config[1] }} — Tatuador &amp; Developer</p>
+    <a href="https://instagram.com/{{ config[3] }}" target="_blank" class="ik-footer__link">📸 Sígueme en Instagram</a>
   </footer>
+{% endblock %}
 
-
-  <a href="https://wa.me/{{ config[4] }}?text=Hola%20{{ config[1] }},%20vengo%20de%20InkFlow" target="_blank" class="whatsapp-btn" title="¡Escríbeme!"></a>    
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="35" height="35">
-    <path d="M12.031 0C5.406 0 0 5.406 0 12.031c0 2.115.546 4.104 1.503 5.838L.081 24l6.299-1.65c1.693.922 3.62 1.437 5.651 1.437 6.625 0 12.031-5.406 12.031-12.031S18.656 0 12.031 0zm6.842 17.143c-.281.787-1.406 1.504-2.156 1.575-.75.07-1.481.351-4.219-.844-3.375-1.469-5.531-4.875-5.719-5.109-.188-.234-1.406-1.875-1.406-3.562 0-1.687.881-2.531 1.219-2.859.338-.328.75-.422 1.031-.422.281 0 .562 0 .797.011.256.011.599-.099.938.721.353.855 1.159 2.834 1.266 3.047.105.211.176.459.035.741-.14.281-.211.459-.422.703-.211.244-.443.545-.633.732-.211.211-.431.443-.187.865.244.422 1.084 1.781 2.322 2.885 1.598 1.429 2.94 1.875 3.361 2.088.422.211.668.176.915-.106.244-.281 1.054-1.23 1.335-1.652.281-.422.562-.351.938-.211.375.14 2.391 1.125 2.801 1.336.41.211.682.316.782.486.099.17.099.986-.182 1.773z"/>
+{% block whatsapp %}
+  <a href="https://wa.me/{{ config[4] }}?text=Hola%20{{ config[1] }},%20vengo%20de%20InkFlow" target="_blank" class="ik-whatsapp" title="¡Escríbeme!">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
     </svg>
   </a>
-  <script src="/static/js/main.js"></script>
-</body>
-</body>
-</html>
+{% endblock %}

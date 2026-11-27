@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}InkFlow{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}InkFlow — Sistema de reservas y galería para tatuadores independientes{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+  <!-- Toast Notifications -->
+  <div id="flash-container" class="ik-toasts">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="ik-toast ik-toast--{{ category }}">
+            <span class="ik-toast__icon">{% if category == 'success' %}✓{% else %}✕{% endif %}</span>
+            <span class="ik-toast__text">{{ message }}</span>
+            <button class="ik-toast__close" onclick="this.parentElement.remove()" aria-label="Cerrar">×</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  {% block nav %}
+  <nav class="ik-nav" id="navbar">
+    <a href="/" class="ik-nav__logo">Ink<span>Flow</span></a>
+
+    <button class="ik-nav__burger" id="nav-burger" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="ik-nav__links" id="nav-links">
+      {% block nav_links %}
+      <li><a href="/#features">Por qué elegirme</a></li>
+      <li><a href="/#galeria">Galería</a></li>
+      <li><a href="/#resenas">Reseñas</a></li>
+      <li><a href="/#reservar">Reservar</a></li>
+      <li><a href="/mi-perfil" class="ik-nav__accent">Mi Perfil</a></li>
+      {% endblock %}
+    </ul>
+
+    <button id="theme-toggle" class="ik-theme-toggle" title="Cambiar tema">
+      <span id="theme-icon">🌙</span>
+    </button>
+  </nav>
+  {% endblock %}
+
+  <main class="ik-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block footer %}{% endblock %}
+
+  {% block whatsapp %}{% endblock %}
+
+  <script src="/static/js/main.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

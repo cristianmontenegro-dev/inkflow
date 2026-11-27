@@ -1,44 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Historial — InkFlow</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body style="padding-top: 5rem;">
-  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h1 class="section-title" style="text-align: left; margin-bottom: 0;">📜 Historial de Citas</h1>
-      <a href="/admin" style="background: #333; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; border: 1px solid #555;">← Volver al Panel</a>
+{% extends "base.html" %}
+{% block title %}Historial — InkFlow{% endblock %}
+
+{% block nav_links %}
+<li><a href="/">Inicio</a></li>
+<li><a href="/admin">Panel Admin</a></li>
+<li><a href="/configuracion">Configuración</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="ik-wide">
+  <div class="ik-page-header">
+    <div>
+      <h1 class="ik-title ik-title--left" style="margin-bottom: 0;">📜 Historial de Citas</h1>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Aquí están los tatuajes que ya completaste.</p>
     </div>
-    <p style="color: var(--text-muted); margin-bottom: 2rem; margin-top: 1rem;">Aquí están los tatuajes que ya completaste.</p>
-
-    {% if lista_completadas %}
-      <ul class="reservas-list">
-        {% for reserva in lista_completadas %}
-          <li class="reserva-item" style="opacity: 0.8;">
-            <div class="reserva-info">
-              <span class="reserva-name">{{ reserva[1] }}</span>
-              <span class="reserva-idea">{{ reserva[2] }}</span>
-              <span style="color: #95d5b2; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">
-                ✅ Completado | 📅 {{ reserva[3] }} a las 🕒 {{ reserva[4] }}
-              </span>
-            </div>
-            <div class="reserva-meta">
-              <span class="reserva-id-badge">ID: {{ reserva[0] }}</span>
-              <!-- Botón para borrar del historial definitivamente -->
-              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar del historial permanentemente?');" class="btn-delete">🗑️ Borrar</a>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p class="empty-reservas">Aún no has completado ningún tatuaje. ¡A darle a la máquina!</p>
-    {% endif %}
-
+    <a href="/admin" class="ik-btn ik-btn--ghost ik-btn--sm">← Volver al Panel</a>
   </div>
-</body>
-</html>
+
+  {% if lista_completadas %}
+  <ul class="ik-list">
+    {% for reserva in lista_completadas %}
+    <li class="ik-item" style="opacity: 0.9;">
+      <div class="ik-item__info">
+        <span class="ik-item__name">{{ reserva[1] }}</span>
+        <span class="ik-item__detail">{{ reserva[3] }}</span>
+        <span class="ik-item__meta" style="color: var(--green-light);">
+          ✅ Completado &nbsp;·&nbsp; 📅 {{ reserva[4] }} &nbsp;🕒 {{ reserva[5] }}
+          &nbsp;·&nbsp; <strong style="color: white;">Total: ${{ "{:,.0f}".format(reserva[6] or 0) }}</strong>
+        </span>
+      </div>
+      <div class="ik-item__actions">
+        <span class="ik-badge ik-badge--id">ID: {{ reserva[0] }}</span>
+        <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar del historial permanentemente?');" class="ik-btn ik-btn--ghost ik-btn--sm ik-btn--danger">🗑️ Borrar</a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="ik-card" style="text-align: center; padding: 3rem;">
+    <p style="color: var(--text-muted);">Aún no has completado ningún tatuaje. ¡A darle a la máquina!</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

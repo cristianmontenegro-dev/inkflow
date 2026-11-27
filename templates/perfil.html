@@ -1,77 +1,61 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Perfil — InkFlow</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body style="padding-top: 5rem;">
-  
-  <!-- CONTENEDOR DE MENSAJES FLASH -->
-  <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash-message {{ category }}">
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+{% extends "base.html" %}
+{% block title %}Mi Perfil — InkFlow{% endblock %}
+
+{% block content %}
+<div class="ik-wide">
+  <div class="ik-page-header">
+    <h1 class="ik-title ik-title--left" style="margin-bottom: 0;">👤 Mi Perfil</h1>
+    <a href="/" class="ik-btn ik-btn--ghost ik-btn--sm">← Volver al Inicio</a>
   </div>
 
-  <div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-      <h1 class="section-title" style="text-align: left; margin-bottom: 0;">👤 Mi Perfil</h1>
-      <a href="/" class="btn btn--ghost" style="font-size: 0.9rem;">← Volver al Inicio</a>
+  <!-- SEARCH -->
+  <div class="ik-card ik-card--compact" style="margin-bottom: 2rem;">
+    <h3 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 600;">Consulta tus citas y puntos</h3>
+    <form method="POST" action="/mi-perfil" class="ik-filter">
+      <input type="email" name="email" placeholder="Ingresa tu correo electrónico" required value="{{ email }}" class="ik-input" style="flex: 1;">
+      <button type="submit" class="ik-btn ik-btn--primary ik-btn--sm">Buscar</button>
+    </form>
+  </div>
+
+  {% if email %}
+    <!-- LOYALTY -->
+    <div class="ik-loyalty ik-reveal">
+      <h2 class="ik-loyalty__title">⭐ Programa de Lealtad ⭐</h2>
+      <p class="ik-loyalty__count">Llevas <strong>{{ total_completados }}</strong> tatuajes con nosotros.</p>
+      <p class="ik-loyalty__hint">¡Al llegar a 5, te ganas un flash exclusivo gratis!</p>
     </div>
 
-    <!-- FORMULARIO DE BÚSQUEDA -->
-    <div style="background: #111; padding: 2rem; border-radius: 12px; border: 1px solid #333; margin-bottom: 2rem;">
-      <h3 style="color: white; margin-bottom: 1rem;">Consulta tus citas y puntos</h3>
-      <form method="POST" action="/mi-perfil" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <input type="email" name="email" placeholder="Ingresa tu correo electrónico" required value="{{ email }}" style="flex: 1; padding: 1rem; border-radius: 8px; border: 1px solid #333; background: #000; color: white;">
-        <button type="submit" class="btn btn--primary">Buscar</button>
-      </form>
+    {% if reservas %}
+    <h2 class="ik-title ik-title--left ik-title--sm" style="margin-bottom: 1rem;">Tus Citas</h2>
+    <ul class="ik-list">
+      {% for reserva in reservas %}
+      <li class="ik-item">
+        <div class="ik-item__info">
+          <span class="ik-item__name">{{ reserva[3] }}</span>
+          <span class="ik-item__detail">{{ reserva[1] }} · {{ reserva[2] }}</span>
+          <span class="ik-item__meta">
+            📅 {{ reserva[4] }} &nbsp;🕒 {{ reserva[5] }}
+            {% if reserva[6] %}&nbsp;·&nbsp; <strong>${{ "{:,.0f}".format(reserva[6]) }}</strong>{% endif %}
+          </span>
+        </div>
+        <div class="ik-item__actions">
+          {% if reserva[9] == 'completada' %}
+            <span class="ik-badge ik-badge--done">COMPLETADA</span>
+          {% else %}
+            <span class="ik-badge ik-badge--pending">PENDIENTE</span>
+          {% endif %}
+          {% if reserva[8] == 1 %}
+            <span class="ik-badge ik-badge--paid">ABONO OK</span>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="ik-card" style="text-align: center; padding: 3rem;">
+      <p style="color: var(--text-muted);">No tienes citas registradas aún. ¡Agenda tu primera cita en el inicio!</p>
     </div>
-
-    <!-- RESULTADOS Y SISTEMA DE LEALTAD -->
-    {% if email %}
-      <div style="background: #1b4332; border: 1px solid #2d6a4f; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;">
-        <h2 style="color: #95d5b2; margin-bottom: 0.5rem;">⭐ Programa de Lealtad ⭐</h2>
-        <p style="color: white; font-size: 1.2rem;">Llevas <strong>{{ total_completados }}</strong> tatuajes con nosotros.</p>
-        <p style="color: #95d5b2; font-size: 0.9rem; margin-top: 0.5rem;">¡Al llegar a 5, te ganas un flash exclusivo gratis!</p>
-      </div>
-
-      {% if reservas %}
-        <h2 class="section-title" style="text-align: left; font-size: 1.5rem; margin-bottom: 1rem;">Tus Citas</h2>
-        <ul class="reservas-list">
-          {% for reserva in reservas %}
-            <!-- Usamos clases CSS según el estado para evitar errores en VS Code -->
-            <li class="reserva-item {% if reserva[6] == 'completada' %}estado-completado{% else %}estado-pendiente{% endif %}">
-              <div class="reserva-info">
-                <span class="reserva-name" style="font-size: 1.1rem;">{{ reserva[3] }}</span>
-                <span class="reserva-idea">{{ reserva[2] }}</span>
-                <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
-                  📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }}
-                </span>
-              </div>
-              <div class="reserva-meta">
-                <span class="reserva-id-badge {% if reserva[6] == 'completada' %}badge-completado{% else %}badge-pendiente{% endif %}">
-                  {{ reserva[6] | upper }}
-                </span>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p class="empty-reservas">No tienes citas registradas aún. ¡Agenda tu primera cita en el inicio!</p>
-      {% endif %}
     {% endif %}
-
-  </div>
-</body>
-</html>
+  {% endif %}
+</div>
+{% endblock %}

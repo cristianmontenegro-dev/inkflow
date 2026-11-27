@@ -1,45 +1,49 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Configuración — InkFlow</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body style="padding-top: 6rem;">
-  <div style="max-width: 600px; margin: 0 auto; padding: 2rem 5%;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-      <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2rem;">⚙️ Mi Configuración</h1>
-      <a href="/admin" class="btn btn--ghost" style="font-size: 0.9rem;">← Volver al Panel</a>
-    </div>
+{% extends "base.html" %}
+{% block title %}Configuración — InkFlow{% endblock %}
 
-    <div class="card" style="padding: 2.5rem;">
-      <p style="color: var(--text-muted); margin-bottom: 2rem;">Personaliza cómo te ven tus clientes en la página principal.</p>
-      
-      <form method="POST" class="form-group">
-        <label style="color: white; font-size: 0.9rem;">Tu Nombre Artístico:</label>
-        <input type="text" name="nombre_artista" class="form-input" value="{{ config[1] }}" required>
+{% block nav_links %}
+<li><a href="/">Inicio</a></li>
+<li><a href="/admin">Panel Admin</a></li>
+<li><a href="/historial">Historial</a></li>
+{% endblock %}
 
-        <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">Título de tu Página:</label>
-        <input type="text" name="titulo_principal" class="form-input" value="{{ config[5] }}" required>
-
-        <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">Biografía Corta:</label>
-        <textarea name="biografia" class="form-input" required style="min-height: 80px;">{{ config[2] }}</textarea>
-
-        <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">Usuario de Instagram (sin el @):</label>
-        <input type="text" name="instagram" class="form-input" value="{{ config[3] }}" required>
-
-        <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">WhatsApp (con código de país, sin el +):</label>
-        <input type="text" name="whatsapp" class="form-input" value="{{ config[4] }}" required>
-        
-        <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">Link de Pago (Wompi/MercadoPago):</label>
-        <input type="url" name="link_pago" class="form-input" value="{{ config[6] }}" placeholder="https://checkout.wompi.co/l/...">
-
-        <button type="submit" class="btn btn--primary" style="margin-top: 2rem; width: 100%;">Guardar Cambios ✨</button>
-      </form>
-    </div>
+{% block content %}
+<div class="ik-narrow" style="padding-top: 6rem;">
+  <div class="ik-page-header" style="padding-top: 0;">
+    <h1 class="ik-title ik-title--left ik-title--sm" style="margin-bottom: 0;">⚙️ Mi Configuración</h1>
+    <a href="/admin" class="ik-btn ik-btn--ghost ik-btn--sm">← Volver al Panel</a>
   </div>
-</body>
-</html>
+
+  <div class="ik-card">
+    <p style="color: var(--text-muted); margin-bottom: 2rem;">Personaliza cómo te ven tus clientes en la página principal.</p>
+
+    <form method="POST" class="ik-form">
+      <div>
+        <label class="ik-label">Tu Nombre Artístico</label>
+        <input type="text" name="nombre_artista" class="ik-input" value="{{ config[1] }}" required>
+      </div>
+      <div>
+        <label class="ik-label">Título de tu Página</label>
+        <input type="text" name="titulo_principal" class="ik-input" value="{{ config[5] }}" required>
+      </div>
+      <div>
+        <label class="ik-label">Biografía Corta</label>
+        <textarea name="biografia" class="ik-textarea" required>{{ config[2] }}</textarea>
+      </div>
+      <div>
+        <label class="ik-label">Instagram (sin el @)</label>
+        <input type="text" name="instagram" class="ik-input" value="{{ config[3] }}" required>
+      </div>
+      <div>
+        <label class="ik-label">WhatsApp (con código de país, sin el +)</label>
+        <input type="text" name="whatsapp" class="ik-input" value="{{ config[4] }}" required>
+      </div>
+      <div>
+        <label class="ik-label">Link de Pago (Wompi/MercadoPago)</label>
+        <input type="url" name="link_pago" class="ik-input" value="{{ config[6] }}" placeholder="https://checkout.wompi.co/l/...">
+      </div>
+      <button type="submit" class="ik-btn ik-btn--primary ik-btn--full" style="margin-top: 1rem;">Guardar Cambios ✨</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
