@@ -64,10 +64,15 @@ def init_db():
             biografia TEXT DEFAULT 'Tatuador independiente construyendo arte con disciplina.',
             instagram TEXT DEFAULT 'cristian_rojas328',
             whatsapp TEXT DEFAULT '573219341966',
-            titulo_principal TEXT DEFAULT 'Del primer trazo a tu primer cliente.'
+            titulo_principal TEXT DEFAULT 'Del primer trazo a tu primer cliente.',
+            link_pago TEXT DEFAULT ''
         )
     ''')
-
+    cursor.execute("PRAGMA table_info(configuracion)")
+    columnas = [col[1] for col in cursor.fetchall()]
+    if 'link_pago' not in columnas:
+        cursor.execute("ALTER TABLE configuracion ADD COLUMN link_pago TEXT DEFAULT ''")
+        
     cursor.execute("SELECT COUNT(*) FROM configuracion")
     if cursor.fetchone()[0] == 0:
         cursor.execute('''
@@ -228,7 +233,7 @@ def admin():
     
     cursor.execute("SELECT SUM(precio) FROM reservas WHERE estado = 'completada'")
     ingresos_totales = cursor.fetchone()[0] or 0
-    
+
     cursor.execute("SELECT * FROM flashes")
     flashes = cursor.fetchall()
     
@@ -237,12 +242,16 @@ def admin():
     fechas_grafico = [fila[0] for fila in datos_grafico]
     precios_grafico = [fila[1] for fila in datos_grafico]
     
+    # Traemos la configuración (para el link de Wompi)
+    cursor.execute("SELECT * FROM configuracion WHERE id = 1")
+    config = cursor.fetchone()
+    
     conn.close()
     
     return render_template('admin.html', lista_reservas=reservas, lista_flashes=flashes, 
                            fecha_filtro=fecha_filtro, total_pendientes=total_pendientes, 
                            total_completadas=total_completadas, ingresos_totales=ingresos_totales,
-                           fechas_grafico=fechas_grafico, precios_grafico=precios_grafico)
+                           fechas_grafico=fechas_grafico, precios_grafico=precios_grafico, config=config)
 
 @app.route('/completar/<int:id>')
 def completar(id):
@@ -387,10 +396,11 @@ def configuracion():
         insta = request.form.get('instagram')
         wpp = request.form.get('whatsapp')
         titulo = request.form.get('titulo_principal')
+        link_pago = request.form.get('link_pago')
         
         cursor.execute("""
-            UPDATE configuracion SET nombre_artista = ?, biografia = ?, instagram = ?, whatsapp = ?, titulo_principal = ? WHERE id = 1
-        """, (nombre, bio, insta, wpp, titulo))
+            UPDATE configuracion SET nombre_artista = ?, biografia = ?, instagram = ?, whatsapp = ?, titulo_principal = ?, link_pago = ? WHERE id = 1
+        """, (nombre, bio, insta, wpp, titulo, link_pago))
         conn.commit()
         flash('¡Configuración guardada! Tu página se ha actualizado. ✨', 'success')
         return redirect(url_for('configuracion'))

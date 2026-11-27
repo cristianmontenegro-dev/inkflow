@@ -33,6 +33,9 @@
 
         <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">WhatsApp (con código de país, sin el +):</label>
         <input type="text" name="whatsapp" class="form-input" value="{{ config[4] }}" required>
+        
+        <label style="color: white; font-size: 0.9rem; margin-top: 1rem;">Link de Pago (Wompi/MercadoPago):</label>
+        <input type="url" name="link_pago" class="form-input" value="{{ config[6] }}" placeholder="https://checkout.wompi.co/l/...">
 
         <button type="submit" class="btn btn--primary" style="margin-top: 2rem; width: 100%;">Guardar Cambios ✨</button>
       </form>

@@ -10,6 +10,7 @@
 </head>
 <body style="padding-top: 6rem;">
   
+  <!-- CONTENEDOR DE MENSAJES FLASH -->
   <div id="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
@@ -23,9 +24,12 @@
   <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 5%;">
     
     <!-- CABECERA -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
       <h1 class="section-title" style="text-align: left; margin-bottom: 0; font-size: 2.2rem;">🔒 Panel de Administrador</h1>
-      <a href="/logout" class="btn btn--ghost" style="font-size: 0.9rem;">Salir 🚪</a>
+      <div style="display: flex; gap: 1rem;">
+        <a href="/configuracion" class="btn btn--ghost" style="font-size: 0.9rem; color: #60a5fa; border-color: rgba(96, 165, 250, 0.3);">⚙️ Configuración</a>
+        <a href="/logout" class="btn btn--ghost" style="font-size: 0.9rem;">Salir 🚪</a>
+      </div>
     </div>
 
     <!-- TARJETAS DE ESTADÍSTICAS -->
@@ -61,7 +65,14 @@
           labels: fechas,
           datasets: [{ label: 'Ingresos', data: precios, backgroundColor: 'rgba(230, 57, 70, 0.6)', borderColor: '#e63946', borderWidth: 2, borderRadius: 6 }]
         },
-        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { color: '#9494a0' } }, x: { ticks: { color: '#9494a0' } } } }
+        options: { 
+          responsive: true, 
+          plugins: { legend: { display: false } }, 
+          scales: { 
+            y: { beginAtZero: true, ticks: { color: '#9494a0' }, grid: { color: 'rgba(255,255,255,0.05)' } }, 
+            x: { ticks: { color: '#9494a0' }, grid: { display: false } } 
+          } 
+        }
       });
     </script>
     {% endif %}
@@ -72,11 +83,11 @@
       <form method="GET" action="/admin" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
         <input type="date" name="fecha" value="{{ fecha_filtro or '' }}" class="form-input" style="padding: 0.6rem 1rem;">
         <button type="submit" class="btn btn--primary" style="padding: 0.6rem 1.5rem;">Buscar</button>
-        {% if fecha_filtro %}<a href="/admin" style="color: var(--text-muted); text-decoration: none;">Limpiar ❌</a>{% endif %}
+        {% if fecha_filtro %}<a href="/admin" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Limpiar ❌</a>{% endif %}
       </form>
     </div>
 
-    <!-- LISTA DE RESERVAS -->
+    <!-- LISTA DE RESERVAS PENDIENTES -->
     {% if lista_reservas %}
       <ul class="reservas-list">
         {% for reserva in lista_reservas %}
@@ -86,45 +97,60 @@
               <span class="reserva-idea">{{ reserva[3] }}</span>
               <span style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
                 📅 {{ reserva[4] }} a las 🕒 {{ reserva[5] }} <br>
-                <!-- El "or 0" evita el error si hay datos viejos sin precio -->
-                💰 Total: ${{ "{:,.0f}".format(reserva[6] or 0) }} | 💵 Depósito: ${{ "{:,.0f}".format(reserva[7] or 0) }}
+                <strong style="color: white;">💰 Total: ${{ "{:,.0f}".format(reserva[6] or 0) }}</strong> | 
+                <span style="color: #ffd700;">💵 Depósito: ${{ "{:,.0f}".format(reserva[7] or 0) }}</span>
               </span>
             </div>
-            <div class="reserva-meta">
+            
+            <div class="reserva-meta" style="flex-wrap: wrap; gap: 8px;">
               <span class="badge badge-pendiente">ID: {{ reserva[0] }}</span>
               
+              <!-- BOTÓN DE WOMBI / WHATSAPP -->
               {% if reserva[8] == 1 %}
                 <span class="badge" style="background: rgba(45, 106, 79, 0.2); color: #95d5b2; border: 1px solid #2d6a4f;">💸 Pagado</span>
               {% else %}
-                <a href="/pagar_deposito/{{ reserva[0] }}" class="badge" style="background: #ffd700; color: black; text-decoration: none; font-weight: bold; border: none;">💳 Cobrar</a>
+                <a href="https://wa.me/57{{ reserva[2] | replace('+', '') }}?text=Hola%20{{ reserva[1] }},%20soy%20{{ config[1] }}.%20Para%20confirmar%20tu%20cita%20del%20{{ reserva[4] }}%20a%20las%20{{ reserva[5] }},%20por%20favor%20abona%20el%20dep%C3%B3sito%20de%20${{ reserva[7] }}%20en%20este%20link:%20{{ config[6] }}" 
+                   target="_blank" 
+                   class="btn btn--primary" 
+                   style="background: #25D366; padding: 0.4rem 1rem; font-size: 0.85rem; box-shadow: none;">
+                   💳 Enviar Link Pago
+                </a>
+                <!-- BOTÓN MANUAL POR SI PAGA EN EFECTIVO -->
+                <a href="/pagar_deposito/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem; border-color: #ffd700; color: #ffd700;" title="Marcar como pagado manualmente">💵 Manual</a>
               {% endif %}
               
-              <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 1rem;">✏️</a>
-              <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 1rem; background: #2d6a4f; box-shadow: none;">✅</a>
-              <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 1rem; color: var(--accent); border-color: var(--accent);">🗑️</a>
+              <!-- BOTONES DE ACCIÓN -->
+              <div style="display: flex; gap: 5px; margin-left: auto;">
+                <a href="/editar/{{ reserva[0] }}" class="btn btn--ghost" style="padding: 0.4rem 0.8rem;" title="Editar">✏️</a>
+                <a href="/completar/{{ reserva[0] }}" class="btn btn--primary" style="padding: 0.4rem 0.8rem; background: #2d6a4f; box-shadow: none;" title="Completar">✅</a>
+                <a href="/borrar/{{ reserva[0] }}" onclick="return confirm('¿Borrar a {{ reserva[1] }}?');" class="btn btn--ghost" style="padding: 0.4rem 0.8rem; color: var(--accent); border-color: var(--accent);" title="Borrar">🗑️</a>
+              </div>
             </div>
           </li>
         {% endfor %}
       </ul>
     {% else %}
-      <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay reservas pendientes.</p>
+      <div class="card" style="text-align: center; padding: 3rem;">
+        <p style="color: var(--text-muted);">No hay reservas pendientes en este momento.</p>
+      </div>
     {% endif %}
     
-    <!-- NAVEGACIÓN -->
-    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
+    <!-- NAVEGACIÓN INFERIOR -->
+    <div style="margin-top: 2rem; margin-bottom: 3rem; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
       <a href="/" class="btn btn--ghost">← Volver al inicio</a>
       <a href="/historial" class="btn btn--ghost" style="color: #95d5b2; border-color: #2d6a4f;">📜 Ver historial</a>
       <a href="/exportar" class="btn btn--ghost" style="color: var(--gold); border-color: rgba(255, 215, 0, 0.3);">📥 Exportar (.txt)</a>
-      <a href="/configuracion" class="btn btn--ghost" style="color: #60a5fa; border-color: rgba(96, 165, 250, 0.3);">⚙️ Configuración</a>
     </div>
+
+    <hr style="border-color: #333; margin: 3rem 0;">
 
     <!-- SUBIR FLASH -->
     <div class="card" style="margin-bottom: 3rem; padding: 2rem;">
       <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">Subir nuevo Flash 🎨</h3>
       <form action="/subir_flash" method="POST" enctype="multipart/form-data" class="form-group" style="flex-direction: row; flex-wrap: wrap; align-items: center;">
-        <input type="text" name="titulo" class="form-input" placeholder="Título" required style="flex: 1; min-width: 200px;">
+        <input type="text" name="titulo" class="form-input" placeholder="Título del diseño" required style="flex: 1; min-width: 200px;">
         <input type="file" name="imagen" accept="image/*" required class="form-input" style="flex: 1; min-width: 200px; padding: 0.8rem;">
-        <button type="submit" class="btn btn--primary">Subir</button>
+        <button type="submit" class="btn btn--primary">Subir a la Galería</button>
       </form>
     </div>
 
@@ -134,7 +160,7 @@
       {% for flash in lista_flashes %}
         <div class="card" style="padding: 1rem; text-align: center;">
           <img src="{{ flash[2] }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem;">
-          <p style="color: white; font-size: 0.9rem;">{{ flash[1] }}</p>
+          <p style="color: white; font-size: 0.9rem; margin-bottom: 0.5rem;">{{ flash[1] }}</p>
           <a href="/borrar_flash/{{ flash[0] }}" style="color: var(--accent); font-size: 0.8rem; text-decoration: none; font-weight: 600;">🗑️ Borrar</a>
         </div>
       {% endfor %}
